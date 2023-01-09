@@ -1,5 +1,6 @@
 package ru.restaurantsvoting.model;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,10 +12,13 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Restaurant extends NamedEntity{
+@Entity
+@Table(name = "restaurants")
+public class Restaurant extends NamedEntity {
 
-    private Vote vote;
-
+    @OneToMany
+    @JoinColumn(name = "dishes_id")
     private List<Dish> dishes;
 
+    private int vote;
 }
