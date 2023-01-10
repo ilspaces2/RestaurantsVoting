@@ -1,3 +1,9 @@
+drop table if exists restaurants;
+drop table if exists dishes;
+drop table if exists votes;
+drop table if exists user_roles;
+drop table if exists users;
+
 create table users(
     id serial primary key,
     email varchar not null,
@@ -20,9 +26,15 @@ create table dishes(
     price float not null
 );
 
-create table restaurant(
+create table votes(
+    id serial primary key,
+    date_time timestamp,
+    user_id int references users(id)
+);
+
+create table restaurants(
     id serial primary key,
     name varchar not null,
-    vote int,
-    dishes_id int references dishes(id)
+    dish_id int references dishes(id),
+    vote_id int references votes(id)
 );

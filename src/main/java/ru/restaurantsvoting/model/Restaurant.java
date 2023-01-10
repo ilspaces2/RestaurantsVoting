@@ -17,8 +17,10 @@ import java.util.List;
 public class Restaurant extends NamedEntity {
 
     @OneToMany
-    @JoinColumn(name = "dishes_id")
+    @JoinColumn(name = "dish_id")
     private List<Dish> dishes;
 
-    private int vote;
+    @OneToMany
+    @JoinColumn(name = "vote_id")
+    private List<Vote> votes;
 }
