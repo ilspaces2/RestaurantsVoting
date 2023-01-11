@@ -20,7 +20,5 @@ public class Restaurant extends NamedEntity {
     @JoinColumn(name = "dish_id")
     private List<Dish> dishes;
 
-    @OneToMany
-    @JoinColumn(name = "vote_id")
-    private List<Vote> votes;
+    private int votes;
 }
