@@ -1,5 +1,6 @@
 package ru.restaurantsvoting.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,6 +19,7 @@ public class User extends NamedEntity {
 
     private String email;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     private boolean voted = false;
@@ -28,12 +30,4 @@ public class User extends NamedEntity {
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
-
-    public User(Integer id, String name, String email, String password, boolean voted, Set<Role> roles) {
-        super(id, name);
-        this.email = email;
-        this.password = password;
-        this.voted = voted;
-        this.roles = roles;
-    }
 }
