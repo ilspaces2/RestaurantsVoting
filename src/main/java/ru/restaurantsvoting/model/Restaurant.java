@@ -16,7 +16,7 @@ import java.util.List;
 @Table(name = "restaurants")
 public class Restaurant extends NamedEntity {
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "dish_id")
     private List<Dish> dishes;
 

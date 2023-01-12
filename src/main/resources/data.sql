@@ -10,4 +10,4 @@ values ('ADMIN', 1),
 insert into DISHES (NAME, PRICE) values ('beer', 10.5);
 insert into DISHES (NAME, PRICE) values ('pizza', 15.25);
 
-insert into RESTAURANTS (NAME, VOTES, DISH_ID) values ('macdonalds', 3, 1);
+insert into RESTAURANTS (NAME, DISH_ID, VOTES) values ('macdonalds', 1, 1);

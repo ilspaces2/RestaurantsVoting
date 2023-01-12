@@ -6,16 +6,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import ru.restaurantsvoting.model.Restaurant;
 
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true)
 public interface RestaurantRepository extends JpaRepository<Restaurant, Integer> {
 
     @Transactional
     @Modifying
-    @Query("update Restaurant set votes=votes+1 where id=:id")
-    void doVote(int id);
+    @Query("update Restaurant set votes=votes+1 where name=:name")
+    void doVote(String name);
 
     @Transactional
     @Modifying
-    @Query("update Restaurant set votes=votes-1 where id=:id")
-    void cancelVote(int id);
+    @Query("update Restaurant set votes=votes-1 where name=:name")
+    void cancelVote(String name);
 }

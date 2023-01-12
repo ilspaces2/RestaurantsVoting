@@ -1,6 +1,5 @@
 package ru.restaurantsvoting.controller;
 
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +31,7 @@ public class UserController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public List<User> findAll() {
         return userService.findAll();
     }
