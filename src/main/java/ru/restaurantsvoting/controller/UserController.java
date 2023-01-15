@@ -1,13 +1,14 @@
 package ru.restaurantsvoting.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.restaurantsvoting.dto.UserDTO;
 import ru.restaurantsvoting.model.User;
 import ru.restaurantsvoting.service.UserService;
-import ru.restaurantsvoting.dto.UserDTO;
 
 import java.net.URI;
 import java.util.List;
@@ -24,7 +25,7 @@ public class UserController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<User> save(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<User> save(@Valid @RequestBody UserDTO userDTO) {
         User created = userService.save(userDTO);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/users").build().toUri();
