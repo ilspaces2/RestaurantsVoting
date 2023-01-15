@@ -1,3 +1,4 @@
+drop table if exists RESTAURANT_DISHES;
 drop table if exists restaurants;
 drop table if exists dishes;
 drop table if exists votes;
@@ -29,6 +30,10 @@ create table dishes(
 create table restaurants(
     id serial primary key,
     name varchar not null,
-    dish_id int references dishes(id),
     votes int default null
+);
+
+create table RESTAURANT_DISHES(
+    restaurant_id int references restaurants(id),
+    dish_id int references dishes(id)
 );
