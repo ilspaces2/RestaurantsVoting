@@ -4,12 +4,13 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.restaurantsvoting.dto.RestaurantDTO;
 import ru.restaurantsvoting.model.Dish;
 import ru.restaurantsvoting.model.Restaurant;
-import ru.restaurantsvoting.repository.UserRepository;
+import ru.restaurantsvoting.security.AuthUser;
 import ru.restaurantsvoting.service.RestaurantService;
 import ru.restaurantsvoting.validate.ValidateList;
 
@@ -22,11 +23,8 @@ public class RestaurantController {
 
     private final RestaurantService restaurantService;
 
-    private final UserRepository userRepository;
-
-    public RestaurantController(RestaurantService restaurantService, UserRepository userRepository) {
+    public RestaurantController(RestaurantService restaurantService) {
         this.restaurantService = restaurantService;
-        this.userRepository = userRepository;
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -46,8 +44,8 @@ public class RestaurantController {
 
     @PutMapping("/vote/{name}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void vote(@PathVariable String name) {
-        restaurantService.vote(name, userRepository.getReferenceById(2));
+    public void vote(@PathVariable String name, @AuthenticationPrincipal AuthUser authUser) {
+        restaurantService.vote(name, authUser.getUser());
     }
 
     @GetMapping

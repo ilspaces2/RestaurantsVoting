@@ -14,18 +14,18 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
-public class UserController {
+@RequestMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
+public class RegisterController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    public RegisterController(UserService userService) {
         this.userService = userService;
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<User> save(@Valid @RequestBody UserDTO userDTO) {
+    public ResponseEntity<User> register(@Valid @RequestBody UserDTO userDTO) {
         User created = userService.save(userDTO);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/users").build().toUri();
