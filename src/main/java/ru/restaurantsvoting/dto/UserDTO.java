@@ -16,6 +16,6 @@ public class UserDTO extends NamedDTO {
     String email;
 
     @NotBlank
-    @Size(min = 5, max = 120)
+    @Size(min = 5, max = 32)
     String password;
 }

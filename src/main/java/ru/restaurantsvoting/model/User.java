@@ -26,7 +26,7 @@ public class User extends NamedEntity {
     private String email;
 
     @NotBlank
-    @Size(min = 5, max = 30)
+    @Size(max = 256)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
