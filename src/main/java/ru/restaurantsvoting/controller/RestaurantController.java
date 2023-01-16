@@ -34,16 +34,16 @@ public class RestaurantController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @PutMapping(value = "/dish/{name}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/dish/{restaurantName}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Restaurant addDish(@PathVariable String name, @RequestBody @Valid ValidateList<Dish> dishes) {
-        return restaurantService.addDish(name, dishes.getList());
+    public Restaurant addDish(@PathVariable String restaurantName, @RequestBody @Valid ValidateList<Dish> dishes) {
+        return restaurantService.addDish(restaurantName, dishes.getList());
     }
 
-    @PutMapping("/vote/{name}")
+    @PutMapping("/vote/{restaurantName}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void vote(@PathVariable String name, @AuthenticationPrincipal AuthUser authUser) {
-        restaurantService.vote(name, authUser.getUser());
+    public void vote(@PathVariable String restaurantName, @AuthenticationPrincipal AuthUser authUser) {
+        restaurantService.vote(restaurantName, authUser.getUser());
     }
 
     @GetMapping
@@ -51,8 +51,8 @@ public class RestaurantController {
         return restaurantService.findAll();
     }
 
-    @GetMapping("/{name}")
-    public Restaurant get(@PathVariable String name) {
-        return restaurantService.get(name);
+    @GetMapping("/{restaurantName}")
+    public Restaurant get(@PathVariable String restaurantName) {
+        return restaurantService.get(restaurantName);
     }
 }

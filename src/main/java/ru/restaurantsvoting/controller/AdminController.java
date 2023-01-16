@@ -1,11 +1,11 @@
 package ru.restaurantsvoting.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.restaurantsvoting.dto.UserDTO;
 import ru.restaurantsvoting.model.User;
 import ru.restaurantsvoting.service.UserService;
 
@@ -26,5 +26,17 @@ public class AdminController {
     @GetMapping("{id}")
     public User get(@PathVariable int id) {
         return userService.findById(id);
+    }
+
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable int id) {
+        userService.delete(id);
+    }
+
+    @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public User update(@RequestBody @Valid UserDTO userDTO, @PathVariable int id) {
+        return userService.update(userDTO, id);
     }
 }
