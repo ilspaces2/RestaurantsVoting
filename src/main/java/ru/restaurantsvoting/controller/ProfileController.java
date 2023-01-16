@@ -1,6 +1,7 @@
 package ru.restaurantsvoting.controller;
 
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -12,13 +13,10 @@ import ru.restaurantsvoting.service.UserService;
 
 @RestController
 @RequestMapping(value = "/profile", produces = MediaType.APPLICATION_JSON_VALUE)
+@AllArgsConstructor
 public class ProfileController {
 
     private final UserService userService;
-
-    public ProfileController(UserService userService) {
-        this.userService = userService;
-    }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)

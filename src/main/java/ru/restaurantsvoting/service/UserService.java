@@ -1,5 +1,7 @@
 package ru.restaurantsvoting.service;
 
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,21 +31,15 @@ TODO
 
  */
 @Service
+@Slf4j
+@AllArgsConstructor
 public class UserService {
-
-    private final static Logger log = LoggerFactory.getLogger(UserService.class);
 
     private final PasswordEncoder passwordEncoder;
 
     private final UserMapper userMapper;
 
     private final UserRepository userRepository;
-
-    public UserService(PasswordEncoder passwordEncoder, UserMapper userMapper, UserRepository userRepository) {
-        this.passwordEncoder = passwordEncoder;
-        this.userMapper = userMapper;
-        this.userRepository = userRepository;
-    }
 
     public User save(UserDTO userDTO) {
         String email = userDTO.getEmail();

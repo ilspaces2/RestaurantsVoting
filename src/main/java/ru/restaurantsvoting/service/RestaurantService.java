@@ -1,5 +1,7 @@
 package ru.restaurantsvoting.service;
 
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -18,21 +20,15 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
+@Slf4j
+@AllArgsConstructor
 public class RestaurantService {
-
-    private static final Logger log = LoggerFactory.getLogger(RestaurantService.class);
 
     private final RestaurantRepository restaurantRepository;
 
     private final RestaurantMapper restaurantMapper;
 
     private final DishRepository dishRepository;
-
-    public RestaurantService(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper, DishRepository dishRepository) {
-        this.restaurantRepository = restaurantRepository;
-        this.restaurantMapper = restaurantMapper;
-        this.dishRepository = dishRepository;
-    }
 
     public Restaurant save(RestaurantDTO restaurantDTO) {
         log.info("Add restaurant : {}", restaurantDTO.getName());

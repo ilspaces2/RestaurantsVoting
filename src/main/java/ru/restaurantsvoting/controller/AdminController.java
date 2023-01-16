@@ -1,5 +1,6 @@
 package ru.restaurantsvoting.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,13 +13,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/admin", produces = MediaType.APPLICATION_JSON_VALUE)
+@AllArgsConstructor
 public class AdminController {
 
     private final UserService userService;
-
-    public AdminController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping
     public List<User> findAll() {

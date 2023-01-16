@@ -26,13 +26,11 @@ import java.util.Optional;
 @AllArgsConstructor
 //https://stackoverflow.com/questions/72493425/548473
 public class SecurityConfiguration {
-    public static final PasswordEncoder PASSWORD_ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-
     private final UserRepository userRepository;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return PASSWORD_ENCODER;
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
     @Bean
