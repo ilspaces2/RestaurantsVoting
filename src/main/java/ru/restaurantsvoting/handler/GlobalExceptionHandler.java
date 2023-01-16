@@ -58,6 +58,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return createProblemDetailExceptionResponse(ex, HttpStatus.NOT_FOUND, request);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> noSuchElementException(IllegalArgumentException ex, WebRequest request) {
+        log.error("ArgumentException: {}", ex.getMessage());
+        return createProblemDetailExceptionResponse(ex, HttpStatus.CONFLICT, request);
+    }
+
     private ResponseEntity<?> createProblemDetailExceptionResponse(Exception ex, HttpStatusCode statusCode, WebRequest request) {
         ProblemDetail body = createProblemDetail(ex, statusCode, ex.getMessage(), null, null, request);
         return handleExceptionInternal(ex, body, new HttpHeaders(), statusCode, request);

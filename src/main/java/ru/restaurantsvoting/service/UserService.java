@@ -2,8 +2,6 @@ package ru.restaurantsvoting.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,18 +16,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-/*
-TODO
-   1. update with current email
-   2. toString user and userdto
-   3. check all controllers
-   4. check security config?
-   5. check exceptions and handler
-   6. lombok all classes
-   7. documents api
-   8. tests
-
- */
 @Service
 @Slf4j
 @AllArgsConstructor
@@ -41,27 +27,31 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public User save(UserDTO userDTO) {
-        String email = userDTO.getEmail();
+    public User save(User user) {
+        String email = user.getEmail();
         userRepository.findByEmailIgnoreCase(email).orElseThrow(
                 () -> new UserAlreadyExistsException(String.format("User already exists with email: %s", email))
         );
-        log.info("Save user: {}", email);
-        User user = userMapper.toModel(userDTO);
         user.setRoles(Set.of(Role.USER));
+        log.info("Save user: {}", user);
         return userRepository.save(prepareToSave(user));
     }
 
     @Transactional
     public User update(UserDTO userDTO, int id) {
         User user = findById(id);
+        userDTO.setId(id);
+        User rzl = userMapper.toModel(userDTO);
+        rzl.setRoles(user.getRoles());
         log.info("Update user: from {} to {}", user, userDTO);
-        user = userMapper.toModel(userDTO);
-        return userRepository.save(prepareToSave(user));
+        return userRepository.save(prepareToSave(rzl));
     }
 
     public void delete(int id) {
-        userRepository.delete(findById(id));
+        if (findById(id).getRoles().stream().anyMatch(role -> role.equals(Role.ADMIN))) {
+            throw new IllegalArgumentException("Can`t delete account");
+        }
+        userRepository.deleteById(id);
     }
 
     public List<User> findAll() {
