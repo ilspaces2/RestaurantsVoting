@@ -36,7 +36,7 @@ public class SecurityConfiguration {
     @Bean
     public UserDetailsService userDetailsService() {
         return email -> {
-            log.debug("Authenticating '{}'", email);
+            log.info("Authenticating '{}'", email);
             Optional<User> optionalUser = userRepository.findByEmailIgnoreCase(email);
             return new AuthUser(optionalUser.orElseThrow(
                     () -> new UsernameNotFoundException("User '" + email + "' was not found")));
@@ -47,6 +47,8 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
                 .requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
+                .requestMatchers("/restaurants/dish/*").hasRole(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.POST, "/restaurants").hasRole(Role.ADMIN.name())
                 .requestMatchers(HttpMethod.POST, "/register").anonymous()
                 .requestMatchers("/**").authenticated()
                 .and().httpBasic()
