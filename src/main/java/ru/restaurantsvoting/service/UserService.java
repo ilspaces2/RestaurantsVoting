@@ -29,9 +29,9 @@ public class UserService {
 
     public User save(User user) {
         String email = user.getEmail();
-        userRepository.findByEmailIgnoreCase(email).orElseThrow(
-                () -> new UserAlreadyExistsException(String.format("User already exists with email: %s", email))
-        );
+        if (userRepository.findByEmailIgnoreCase(email).isPresent()) {
+            throw new UserAlreadyExistsException(String.format("User already exists with email: %s", email));
+        }
         user.setRoles(Set.of(Role.USER));
         log.info("Save user: {}", user);
         return userRepository.save(prepareToSave(user));
