@@ -39,4 +39,12 @@ public class User extends NamedEntity {
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "email='" + email + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

@@ -15,9 +15,4 @@ public abstract class BaseDTO {
     public boolean isNew() {
         return id == null;
     }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + ":" + id;
-    }
 }

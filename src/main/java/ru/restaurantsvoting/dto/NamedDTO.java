@@ -13,8 +13,4 @@ public class NamedDTO extends BaseDTO {
     @Size(min = 2, max = 120)
     protected String name;
 
-    @Override
-    public String toString() {
-        return super.toString() + '[' + name + ']';
-    }
 }

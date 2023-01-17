@@ -18,4 +18,12 @@ public class UserDTO extends NamedDTO {
     @NotBlank
     @Size(min = 5, max = 32)
     String password;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "email='" + email + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
