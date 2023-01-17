@@ -3,15 +3,11 @@ package ru.restaurantsvoting;
 public class Todo {
     /*
 TODO
-   1. update with current email     +
-   2. toString user and userdto
-   3. check all controllers     +
-   4. check security config?    +
-   5. check exceptions and handler
-   6. uniq restaurant
-   7. lombok all classes    -+
-   8. documents api
-   9. tests
+   1. check exceptions and handler
+   2. uniq restaurant
+   3. lombok all classes    -+
+   4. documents api
+   5. tests
 
  */
 }
