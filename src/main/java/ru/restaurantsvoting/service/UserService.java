@@ -30,10 +30,10 @@ public class UserService {
     public User save(User user) {
         String email = user.getEmail();
         if (userRepository.findByEmailIgnoreCase(email).isPresent()) {
-            throw new UserAlreadyExistsException(String.format("User already exists with email: %s", email));
+            throw new UserAlreadyExistsException(String.format("User already exists with email '%s'", email));
         }
         user.setRoles(Set.of(Role.USER));
-        log.info("Save user: {}", user);
+        log.info("Save user '{}'", user);
         return userRepository.save(prepareToSave(user));
     }
 
@@ -43,7 +43,7 @@ public class UserService {
         userDTO.setId(id);
         User rzl = userMapper.toModel(userDTO);
         rzl.setRoles(user.getRoles());
-        log.info("Update user: from {} to {}", user, userDTO);
+        log.info("Update user from '{}' to '{}'", user, userDTO);
         return userRepository.save(prepareToSave(rzl));
     }
 

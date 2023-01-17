@@ -2,6 +2,7 @@ package ru.restaurantsvoting.controller;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import ru.restaurantsvoting.service.RestaurantService;
 import ru.restaurantsvoting.validate.ValidateList;
 
 import java.net.URI;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -34,16 +36,16 @@ public class RestaurantController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @PutMapping(value = "/dish/{restaurantName}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "dish/{restaurantName}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Restaurant addDish(@PathVariable String restaurantName, @RequestBody @Valid ValidateList<Dish> dishes) {
         return restaurantService.addDish(restaurantName, dishes.getList());
     }
 
-    @PutMapping("/vote/{restaurantName}")
+    @PutMapping("vote/{restaurantName}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void vote(@PathVariable String restaurantName, @AuthenticationPrincipal AuthUser authUser) {
-        restaurantService.vote(restaurantName, authUser.getUser());
+    public String vote(@PathVariable String restaurantName, @AuthenticationPrincipal AuthUser authUser) {
+        return restaurantService.vote(restaurantName, authUser.getUser());
     }
 
     @GetMapping
@@ -51,8 +53,14 @@ public class RestaurantController {
         return restaurantService.findAll();
     }
 
-    @GetMapping("/{restaurantName}")
+    @GetMapping("{restaurantName}")
     public Restaurant get(@PathVariable String restaurantName) {
         return restaurantService.get(restaurantName);
+    }
+
+    @GetMapping("setTime")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void setTime(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime time) {
+        restaurantService.setTime(time);
     }
 }

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import ru.restaurantsvoting.exception.AlreadyVotedException;
 import ru.restaurantsvoting.exception.UserAlreadyExistsException;
 
 import java.util.HashMap;
@@ -37,12 +36,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         body.setStatus(HttpStatus.UNPROCESSABLE_ENTITY);
         log.error("ArgumentNotValidException: {}", invalidParams);
         return handleExceptionInternal(ex, body, headers, HttpStatus.UNPROCESSABLE_ENTITY, request);
-    }
-
-    @ExceptionHandler(AlreadyVotedException.class)
-    public ResponseEntity<?> voteConflictException(AlreadyVotedException ex, WebRequest request) {
-        log.error("VoteException: {}", ex.getMessage());
-        return createProblemDetailExceptionResponse(ex, HttpStatus.CONFLICT, request);
     }
 
     @ExceptionHandler(Exception.class)

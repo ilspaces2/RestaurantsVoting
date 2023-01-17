@@ -26,6 +26,8 @@ import java.util.Optional;
 @AllArgsConstructor
 //https://stackoverflow.com/questions/72493425/548473
 public class SecurityConfiguration {
+
+    private static final String ADMIN = Role.ADMIN.name();
     private final UserRepository userRepository;
 
     @Bean
@@ -46,9 +48,10 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
-                .requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
-                .requestMatchers("/restaurants/dish/*").hasRole(Role.ADMIN.name())
-                .requestMatchers(HttpMethod.POST, "/restaurants").hasRole(Role.ADMIN.name())
+                .requestMatchers("/admin/**").hasRole(ADMIN)
+                .requestMatchers("/restaurants/dish/*").hasRole(ADMIN)
+                .requestMatchers("/restaurants/setTime").hasRole(ADMIN)
+                .requestMatchers(HttpMethod.POST, "/restaurants").hasRole(ADMIN)
                 .requestMatchers(HttpMethod.POST, "/register").anonymous()
                 .requestMatchers("/**").authenticated()
                 .and().httpBasic()
