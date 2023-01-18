@@ -1,7 +1,7 @@
 insert into USERS (EMAIL, NAME, PASSWORD,VOTED)
 values ('admin@admin.com', 'admin','{noop}admin', false );
 insert into USERS (EMAIL, NAME, PASSWORD,VOTED)
-values ('user1@user1.com', 'user1','{noop}user1', false );
+values ('user@user.com', 'user1','{noop}user1', false );
 
 insert into user_roles (role, user_id)
 values ('ADMIN', 1),

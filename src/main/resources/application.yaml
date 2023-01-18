@@ -24,3 +24,7 @@ spring:
 
 logging:
   file.name: ./log/voting.log
+
+springdoc:
+  api-docs:
+    path: /api-docs
