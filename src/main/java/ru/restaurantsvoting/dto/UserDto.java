@@ -8,7 +8,7 @@ import lombok.Value;
 
 @Value
 @EqualsAndHashCode(callSuper = true)
-public class UserDTO extends NamedDTO {
+public class UserDto extends NamedDto {
 
     @Email
     @NotBlank

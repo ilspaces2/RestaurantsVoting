@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class NamedDTO extends BaseDTO {
+public class NamedDto extends BaseDto {
 
     @NotBlank
     @Size(min = 2, max = 120)

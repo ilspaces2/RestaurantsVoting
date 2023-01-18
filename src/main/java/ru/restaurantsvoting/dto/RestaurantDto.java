@@ -6,5 +6,5 @@ import ru.restaurantsvoting.model.NamedEntity;
 
 @Value
 @EqualsAndHashCode(callSuper = true)
-public class RestaurantDTO extends NamedEntity {
+public class RestaurantDto extends NamedEntity {
 }

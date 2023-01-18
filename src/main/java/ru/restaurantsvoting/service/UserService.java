@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.restaurantsvoting.dto.UserDTO;
+import ru.restaurantsvoting.dto.UserDto;
 import ru.restaurantsvoting.exception.AlreadyExistsException;
 import ru.restaurantsvoting.mapper.UserMapper;
 import ru.restaurantsvoting.model.Role;
@@ -38,7 +38,7 @@ public class UserService {
     }
 
     @Transactional
-    public User update(UserDTO userDTO, int id) {
+    public User update(UserDto userDTO, int id) {
         User user = findById(id);
         userDTO.setId(id);
         User rzl = userMapper.toModel(userDTO);

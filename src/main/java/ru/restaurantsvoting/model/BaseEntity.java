@@ -1,5 +1,6 @@
 package ru.restaurantsvoting.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.util.ProxyUtils;
@@ -14,8 +15,10 @@ public abstract class BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(hidden = true)
     protected Integer id;
 
+    @Schema(hidden = true)
     public boolean isNew() {
         return id == null;
     }

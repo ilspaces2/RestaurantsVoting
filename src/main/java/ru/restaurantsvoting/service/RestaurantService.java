@@ -5,7 +5,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.restaurantsvoting.dto.RestaurantDTO;
+import ru.restaurantsvoting.dto.RestaurantDto;
 import ru.restaurantsvoting.exception.AlreadyExistsException;
 import ru.restaurantsvoting.mapper.RestaurantMapper;
 import ru.restaurantsvoting.model.Dish;
@@ -35,7 +35,7 @@ public class RestaurantService {
     @Setter
     private LocalTime time = LocalTime.of(11, 0, 0);
 
-    public Restaurant save(RestaurantDTO restaurantDTO) {
+    public Restaurant save(RestaurantDto restaurantDTO) {
         if (restaurantRepository.findByName(restaurantDTO.getName()).isPresent()) {
             throw new AlreadyExistsException(
                     String.format("Restaurant already exists with name '%s'", restaurantDTO.getName())
@@ -55,19 +55,19 @@ public class RestaurantService {
         get(restaurantName);
         if (user.isVoted() && LocalTime.now().isAfter(time)) {
             log.info("User '{}' already voted for '{}'", user.getName(), restaurantName);
-            return "Already voted";
+            return "\"Already voted\"";
         } else if (user.isVoted() && LocalTime.now().isBefore(time)) {
             user.setVoted(false);
             userRepository.save(user);
             restaurantRepository.cancelVote(restaurantName);
             log.info("User '{}' canceled vote for '{}'", user.getName(), restaurantName);
-            return "Canceled vote";
+            return "\"Canceled vote\"";
         } else {
             user.setVoted(true);
             userRepository.save(user);
             restaurantRepository.doVote(restaurantName);
             log.info("User '{}' voted for '{}'", user.getName(), restaurantName);
-            return "Voted";
+            return "\"Voted\"";
         }
     }
 
