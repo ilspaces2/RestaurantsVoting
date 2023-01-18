@@ -3,11 +3,10 @@ package ru.restaurantsvoting;
 public class Todo {
     /*
 TODO
-   1. check exceptions and handler
-   2. uniq restaurant
-   3. lombok all classes    -+
-   4. documents api
-   5. tests
-
+   1. lombok all classes    -+
+   2. swagger api
+   3. tests
+   4. optional: jwt auth
+   5. think what add...
  */
 }
