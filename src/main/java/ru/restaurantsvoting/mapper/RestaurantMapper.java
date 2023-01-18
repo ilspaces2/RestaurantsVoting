@@ -8,6 +8,4 @@ import ru.restaurantsvoting.model.Restaurant;
 public interface RestaurantMapper {
 
     Restaurant toModel(RestaurantDTO RestaurantTo);
-
-    RestaurantDTO toDto(Restaurant restaurant);
 }

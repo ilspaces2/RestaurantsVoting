@@ -8,6 +8,4 @@ import ru.restaurantsvoting.model.User;
 public interface UserMapper {
 
     User toModel(UserDTO userTo);
-
-    UserDTO toDto(User user);
 }
