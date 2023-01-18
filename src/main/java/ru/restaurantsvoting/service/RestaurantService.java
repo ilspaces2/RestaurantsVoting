@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.restaurantsvoting.dto.RestaurantDTO;
+import ru.restaurantsvoting.exception.AlreadyExistsException;
 import ru.restaurantsvoting.mapper.RestaurantMapper;
 import ru.restaurantsvoting.model.Dish;
 import ru.restaurantsvoting.model.Restaurant;
@@ -35,6 +36,11 @@ public class RestaurantService {
     private LocalTime time = LocalTime.of(11, 0, 0);
 
     public Restaurant save(RestaurantDTO restaurantDTO) {
+        if (restaurantRepository.findByName(restaurantDTO.getName()).isPresent()) {
+            throw new AlreadyExistsException(
+                    String.format("Restaurant already exists with name '%s'", restaurantDTO.getName())
+            );
+        }
         log.info("Add restaurant '{}'", restaurantDTO.getName());
         return restaurantRepository.save(restaurantMapper.toModel(restaurantDTO));
     }

@@ -6,7 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.restaurantsvoting.dto.UserDTO;
-import ru.restaurantsvoting.exception.UserAlreadyExistsException;
+import ru.restaurantsvoting.exception.AlreadyExistsException;
 import ru.restaurantsvoting.mapper.UserMapper;
 import ru.restaurantsvoting.model.Role;
 import ru.restaurantsvoting.model.User;
@@ -30,7 +30,7 @@ public class UserService {
     public User save(User user) {
         String email = user.getEmail();
         if (userRepository.findByEmailIgnoreCase(email).isPresent()) {
-            throw new UserAlreadyExistsException(String.format("User already exists with email '%s'", email));
+            throw new AlreadyExistsException(String.format("User already exists with email '%s'", email));
         }
         user.setRoles(Set.of(Role.USER));
         log.info("Save user '{}'", user);

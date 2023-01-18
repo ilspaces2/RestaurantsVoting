@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import ru.restaurantsvoting.exception.UserAlreadyExistsException;
+import ru.restaurantsvoting.exception.AlreadyExistsException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,8 +56,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return createProblemDetailExceptionResponse(ex, HttpStatus.CONFLICT, request);
     }
 
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<?> userAlreadyExistsException(UserAlreadyExistsException ex, WebRequest request) {
+    @ExceptionHandler(AlreadyExistsException.class)
+    public ResponseEntity<?> userAlreadyExistsException(AlreadyExistsException ex, WebRequest request) {
         log.error("UserAlreadyExistsException: {}", ex.getMessage());
         return createProblemDetailExceptionResponse(ex, HttpStatus.CONFLICT, request);
     }

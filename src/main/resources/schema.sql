@@ -29,7 +29,7 @@ create table dishes(
 
 create table restaurants(
     id serial primary key,
-    name varchar not null,
+    name varchar unique not null,
     votes int default null
 );
 
