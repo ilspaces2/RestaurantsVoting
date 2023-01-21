@@ -1,0 +1,3 @@
+databaseChangeLog:
+  - include.file: db/001_ddl_create_tables.sql
+  - include.file: db/002_dml_add_data.sql
