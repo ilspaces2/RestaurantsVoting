@@ -1,10 +1,10 @@
 package ru.restaurantsvoting.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -66,10 +66,16 @@ public class RestaurantController {
         return restaurantService.get(restaurantName);
     }
 
-    @Operation(summary = "Set vote time", description = "This is for admin. Default value 11:00:00")
+    /*
+    Add pattern because Swagger UI throw error validation.
+    Swagger expected pattern @date-time, but actual value is time.
+     */
+    @Operation(summary = "Set vote time", description = "This is for admin")
     @GetMapping("setTime")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void setTime(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime time) {
+    public void setTime(@Schema(pattern = "^(?:2[0-3]|[0-1][0-9]):[0-5][0-9]$",
+            defaultValue = "24-hour time, 11:00",
+            example = "23:15") @RequestParam LocalTime time) {
         restaurantService.setTime(time);
     }
 }
