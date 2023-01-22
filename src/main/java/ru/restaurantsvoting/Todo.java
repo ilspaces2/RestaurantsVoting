@@ -3,9 +3,8 @@ package ru.restaurantsvoting;
 public class Todo {
     /*
 TODO
-   1. swagger api added. maybe improve docs
+   1. optional: jwt auth
    2. tests
-   3. optional: jwt auth
-   4. think what add...
+   3. think what add...
  */
 }
