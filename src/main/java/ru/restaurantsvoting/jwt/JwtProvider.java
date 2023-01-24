@@ -24,6 +24,12 @@ public class JwtProvider {
 
     private final SecretKey jwtRefreshSecret;
 
+    @Value("${jwt.access.expiration.timeOfMinutes}")
+    private int accessExpirationTime;
+
+    @Value("${jwt.refresh.expiration.timeOfMinutes}")
+    private int refreshExpirationTime;
+
     public JwtProvider(@Value("${jwt.secret.access}") String jwtAccessSecret,
                        @Value("${jwt.secret.refresh}") String jwtRefreshSecret) {
         this.jwtAccessSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtAccessSecret));
@@ -33,27 +39,27 @@ public class JwtProvider {
     public String generateAccessToken(User user) {
         return Jwts.builder()
                 .setSubject(user.getEmail())
-                .setExpiration(generateExpirationTime(5))
+                .setExpiration(generateExpirationTime(accessExpirationTime))
                 .signWith(jwtAccessSecret)
                 .claim("roles", user.getRoles())
                 .claim("name", user.getName())
                 .compact();
     }
 
-    public String generateRefreshToken(User user, int expirationTime) {
+    public String generateRefreshToken(User user) {
         return Jwts.builder()
                 .setSubject(user.getEmail())
-                .setExpiration(generateExpirationTime(30))
+                .setExpiration(generateExpirationTime(refreshExpirationTime))
                 .signWith(jwtRefreshSecret)
                 .compact();
     }
 
-    public boolean validateAccessToken(String token, Key secret) {
-        return validateToken(token, secret);
+    public boolean validateAccessToken(String token) {
+        return validateToken(token, jwtAccessSecret);
     }
 
-    public boolean validateRefreshToken(String token, Key secret) {
-        return validateToken(token, secret);
+    public boolean validateRefreshToken(String token) {
+        return validateToken(token, jwtRefreshSecret);
     }
 
     public Claims getAccessClaims(String token) {

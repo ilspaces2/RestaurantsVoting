@@ -25,5 +25,7 @@ logging:
 springdoc:
   api-docs.path: /api-docs
 
-jwt.secret.access: 'one'
-jwt.secret.refresh: 'two'
+jwt.secret.access: one
+jwt.secret.refresh: two
+jwt.access.expiration.timeOfMinutes: 5
+jwt.refresh.expiration.timeOfMinutes: 30
