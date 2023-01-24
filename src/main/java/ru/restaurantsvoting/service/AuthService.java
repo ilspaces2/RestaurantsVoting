@@ -1,12 +1,11 @@
 package ru.restaurantsvoting.service;
 
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 import ru.restaurantsvoting.jwt.JwtProvider;
-import ru.restaurantsvoting.jwt.JwtRequest;
+import ru.restaurantsvoting.jwt.JwtRequestLogin;
 import ru.restaurantsvoting.jwt.JwtResponse;
 import ru.restaurantsvoting.model.Token;
 import ru.restaurantsvoting.model.User;
@@ -27,11 +26,11 @@ public class AuthService {
 
     private final JwtProvider jwtProvider;
 
-    public JwtResponse login(JwtRequest authRequest) {
+    public JwtResponse login(JwtRequestLogin authRequest) {
         User user = getUserByEmail(authRequest.getEmail());
-        if (!user.getPassword().equals(passwordEncoder.encode(authRequest.getPassword()))) {
-            throw new NotFoundException("Неправильный пароль");
-        }
+//        if (!user.getPassword().equals(passwordEncoder.encode(authRequest.getPassword()))) {
+//            throw new NotFoundException("Неправильный пароль");
+//        }
         String accessToken = jwtProvider.generateAccessToken(user);
         String refreshToken = jwtProvider.generateRefreshToken(user);
         tokenRepository.save(new Token(user.getEmail(), refreshToken));
@@ -39,43 +38,36 @@ public class AuthService {
     }
 
     public JwtResponse getNewAccessToken(String refreshToken) {
-        if (jwtProvider.validateRefreshToken(refreshToken)) {
-            Claims claims = jwtProvider.getRefreshClaims(refreshToken);
-            String email = claims.getSubject();
-            String savedRefreshToken = tokenRepository.findByEmail(email).orElseThrow().getRefreshToken();
-            if (savedRefreshToken.equals(refreshToken)) {
-                User user = getUserByEmail(email);
-                String accessToken = jwtProvider.generateAccessToken(user);
-                return new JwtResponse(accessToken, null);
-            }
-        }
-        return new JwtResponse(null, null);
+        return generateTokens(refreshToken, false);
     }
 
     public JwtResponse refreshToken(String refreshToken) {
-        if (jwtProvider.validateRefreshToken(refreshToken)) {
-            Claims claims = jwtProvider.getRefreshClaims(refreshToken);
-            String email = claims.getSubject();
-            String savedRefreshToken = tokenRepository.findByEmail(email).orElseThrow().getRefreshToken();
-            if (savedRefreshToken.equals(refreshToken)) {
-                User user = getUserByEmail(email);
-                String accessToken = jwtProvider.generateAccessToken(user);
-                String newRefreshToken = jwtProvider.generateRefreshToken(user);
-                tokenRepository.save(new Token(user.getEmail(), refreshToken));
-                return new JwtResponse(accessToken, newRefreshToken);
-            }
-        }
-        throw new NoSuchElementException("Невалидный JWT токен");
+        return generateTokens(refreshToken, true);
     }
 
     private User getUserByEmail(String email) {
         return userRepository.findByEmailIgnoreCase(email)
-                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+                .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
-    /*
-        public JwtAuthentication getAuthInfo() {
-        return (JwtAuthentication) SecurityContextHolder.getContext().getAuthentication();
+    private JwtResponse generateTokens(String token, boolean refresh) {
+        if (!jwtProvider.validateRefreshToken(token)) {
+            throw new NoSuchElementException("Невалидный JWT токен");
         }
-     */
+        String email = jwtProvider.getRefreshClaims(token).getSubject();
+        String savedRefreshToken = tokenRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("Token not found"))
+                .getRefreshToken();
+        if (savedRefreshToken.equals(token)) {
+            User user = getUserByEmail(email);
+            String accessToken = jwtProvider.generateAccessToken(user);
+            if (refresh) {
+                String refreshToken = jwtProvider.generateAccessToken(user);
+                tokenRepository.save(new Token(user.getEmail(), refreshToken));
+                return new JwtResponse(accessToken, refreshToken);
+            }
+            return new JwtResponse(accessToken, null);
+        }
+        return new JwtResponse(null, null);
+    }
 }

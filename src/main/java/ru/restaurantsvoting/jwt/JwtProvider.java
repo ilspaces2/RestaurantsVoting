@@ -4,6 +4,8 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -24,16 +26,19 @@ public class JwtProvider {
 
     private final SecretKey jwtRefreshSecret;
 
-    @Value("${jwt.access.expiration.timeOfMinutes}")
-    private int accessExpirationTime;
+    @Value("${accessTimeOfMinutes}")
+    private final int accessExpirationTime;
 
-    @Value("${jwt.refresh.expiration.timeOfMinutes}")
-    private int refreshExpirationTime;
+    private final int refreshExpirationTime;
 
-    public JwtProvider(@Value("${jwt.secret.access}") String jwtAccessSecret,
-                       @Value("${jwt.secret.refresh}") String jwtRefreshSecret) {
+    public JwtProvider(@Value("${access}") String jwtAccessSecret,
+                       @Value("${refresh}") String jwtRefreshSecret,
+                       @Value("${accessTimeOfMinutes}") int accessExpirationTime,
+                       @Value("${refreshTimeOfMinutes}") int refreshExpirationTime) {
         this.jwtAccessSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtAccessSecret));
         this.jwtRefreshSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtRefreshSecret));
+        this.accessExpirationTime = accessExpirationTime;
+        this.refreshExpirationTime = refreshExpirationTime;
     }
 
     public String generateAccessToken(User user) {

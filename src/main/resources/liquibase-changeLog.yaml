@@ -1,3 +1,10 @@
 databaseChangeLog:
-  - include.file: db/001_ddl_create_tables.sql
-  - include.file: db/002_dml_add_data.sql
+  - include:
+      file: db/001_ddl_create_tables.sql
+      relativeToChangelogFile: true
+  - include:
+      file: db/002_dml_add_data.sql
+      relativeToChangelogFile: true
+  - include:
+      file: db/003_ddl_add_table_token.sql
+      relativeToChangelogFile: true
