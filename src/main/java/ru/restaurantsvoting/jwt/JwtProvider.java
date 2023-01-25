@@ -4,12 +4,13 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-import ru.restaurantsvoting.model.User;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
@@ -22,38 +23,38 @@ import java.util.Date;
 @Component
 public class JwtProvider {
 
-    private final SecretKey jwtAccessSecret;
+    private SecretKey jwtAccessSecret;
 
-    private final SecretKey jwtRefreshSecret;
+    private SecretKey jwtRefreshSecret;
 
-    @Value("${accessTimeOfMinutes}")
-    private final int accessExpirationTime;
+    private int accessExpirationTime;
 
-    private final int refreshExpirationTime;
+    private int refreshExpirationTime;
+
+    private final UserDetailsService userDetailsService;
 
     public JwtProvider(@Value("${access}") String jwtAccessSecret,
                        @Value("${refresh}") String jwtRefreshSecret,
                        @Value("${accessTimeOfMinutes}") int accessExpirationTime,
-                       @Value("${refreshTimeOfMinutes}") int refreshExpirationTime) {
+                       @Value("${refreshTimeOfMinutes}") int refreshExpirationTime, UserDetailsService userDetailsService) {
         this.jwtAccessSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtAccessSecret));
         this.jwtRefreshSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtRefreshSecret));
         this.accessExpirationTime = accessExpirationTime;
         this.refreshExpirationTime = refreshExpirationTime;
+        this.userDetailsService = userDetailsService;
     }
 
-    public String generateAccessToken(User user) {
+    public String generateAccessToken(String email) {
         return Jwts.builder()
-                .setSubject(user.getEmail())
+                .setSubject(email)
                 .setExpiration(generateExpirationTime(accessExpirationTime))
                 .signWith(jwtAccessSecret)
-                .claim("roles", user.getRoles())
-                .claim("name", user.getName())
                 .compact();
     }
 
-    public String generateRefreshToken(User user) {
+    public String generateRefreshToken(String email) {
         return Jwts.builder()
-                .setSubject(user.getEmail())
+                .setSubject(email)
                 .setExpiration(generateExpirationTime(refreshExpirationTime))
                 .signWith(jwtRefreshSecret)
                 .compact();
@@ -81,6 +82,12 @@ public class JwtProvider {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    public Authentication getAuthentication(String token) {
+        String login = getAccessClaims(token).getSubject();
+        UserDetails userDetails = userDetailsService.loadUserByUsername(login);
+        return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
     }
 
     private boolean validateToken(String token, Key secret) {
