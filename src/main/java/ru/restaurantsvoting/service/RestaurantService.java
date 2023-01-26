@@ -51,20 +51,19 @@ public class RestaurantService {
     }
 
     @Transactional
-    public String vote(String restaurantName, User user) {
+    public String vote(String restaurantName, int id) {
         get(restaurantName);
+        User user = userRepository.findById(id).orElseThrow();
         if (user.isVoted() && LocalTime.now().isAfter(time)) {
             log.info("User '{}' already voted for '{}'", user.getName(), restaurantName);
             return "\"Already voted\"";
         } else if (user.isVoted() && LocalTime.now().isBefore(time)) {
             user.setVoted(false);
-            userRepository.save(user);
             restaurantRepository.cancelVote(restaurantName);
             log.info("User '{}' canceled vote for '{}'", user.getName(), restaurantName);
             return "\"Canceled vote\"";
         } else {
             user.setVoted(true);
-            userRepository.save(user);
             restaurantRepository.doVote(restaurantName);
             log.info("User '{}' voted for '{}'", user.getName(), restaurantName);
             return "\"Voted\"";

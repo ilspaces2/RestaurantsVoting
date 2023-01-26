@@ -25,19 +25,19 @@ public class ProfileController {
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthUser authUser) {
-        userService.delete(authUser.id());
+        userService.delete(authUser.getId());
     }
 
     @Operation(summary = "Update profile")
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public User update(@RequestBody @Valid UserDto userDTO, @AuthenticationPrincipal AuthUser authUser) {
-        return userService.update(userDTO, authUser.id());
+        return userService.update(userDTO, authUser.getId());
     }
 
     @Operation(summary = "Get profile")
     @GetMapping
     public User get(@AuthenticationPrincipal AuthUser authUser) {
-        return authUser.getUser();
+        return userService.findById(authUser.getId());
     }
 }

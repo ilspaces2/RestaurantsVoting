@@ -13,7 +13,6 @@ import ru.restaurantsvoting.service.UserService;
 
 import java.util.List;
 
-
 @Tag(name = "Admin", description = "The Admin API")
 @RestController
 @RequestMapping(value = "/admin", produces = MediaType.APPLICATION_JSON_VALUE)

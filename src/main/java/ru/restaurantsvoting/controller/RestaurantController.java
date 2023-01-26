@@ -51,7 +51,7 @@ public class RestaurantController {
     @PutMapping("vote/{restaurantName}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public String vote(@PathVariable String restaurantName, @AuthenticationPrincipal AuthUser authUser) {
-        return restaurantService.vote(restaurantName, authUser.getUser());
+        return restaurantService.vote(restaurantName, authUser.getId());
     }
 
     @Operation(summary = "Get all restaurants")
