@@ -1,7 +1,6 @@
 package ru.restaurantsvoting.config;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,7 +14,8 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import ru.restaurantsvoting.jwt.JwtFilter;
+import ru.restaurantsvoting.handler.FilterExceptionHandler;
+import ru.restaurantsvoting.security.jwt.JwtFilter;
 import ru.restaurantsvoting.model.Role;
 import ru.restaurantsvoting.security.UserDetailsServiceImpl;
 
@@ -30,6 +30,7 @@ public class SecurityConfiguration {
     private final UserDetailsServiceImpl userDetailsService;
 
     private final JwtFilter jwtFilter;
+    private final FilterExceptionHandler filterExceptionHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -41,12 +42,11 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.POST, "/register", "/login").permitAll()
                 .requestMatchers("/api-docs/**", "/swagger-ui/**").permitAll()
-                .requestMatchers("/admin/**").hasRole(ADMIN)
-                .requestMatchers("/restaurants/dish/*").hasRole(ADMIN)
-                .requestMatchers("/restaurants/setTime").hasRole(ADMIN)
+                .requestMatchers("/restaurants/dish/*", "/admin/**", "/restaurants/setTime").hasRole(ADMIN)
                 .requestMatchers(HttpMethod.POST, "/restaurants").hasRole(ADMIN)
                 .anyRequest().authenticated()
-                .and().addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .and().addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(filterExceptionHandler, JwtFilter.class);
         return http.build();
     }
 
