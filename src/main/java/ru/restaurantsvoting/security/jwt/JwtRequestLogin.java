@@ -1,4 +1,4 @@
-package ru.restaurantsvoting.jwt;
+package ru.restaurantsvoting.security.jwt;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

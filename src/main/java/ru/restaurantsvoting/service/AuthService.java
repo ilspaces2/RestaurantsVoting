@@ -5,9 +5,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import ru.restaurantsvoting.jwt.JwtProvider;
-import ru.restaurantsvoting.jwt.JwtRequestLogin;
-import ru.restaurantsvoting.jwt.JwtResponse;
+import ru.restaurantsvoting.security.jwt.JwtProvider;
+import ru.restaurantsvoting.security.jwt.JwtRequestLogin;
+import ru.restaurantsvoting.security.jwt.JwtResponse;
 import ru.restaurantsvoting.security.AuthUser;
 
 @Service
