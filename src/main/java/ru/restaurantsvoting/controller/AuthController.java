@@ -1,5 +1,6 @@
 package ru.restaurantsvoting.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -11,6 +12,7 @@ import ru.restaurantsvoting.security.jwt.JwtRequestLogin;
 import ru.restaurantsvoting.security.jwt.JwtResponse;
 import ru.restaurantsvoting.service.AuthService;
 
+@Tag(name = "Authentication", description = "Authentication in the application")
 @RestController
 @RequiredArgsConstructor
 public class AuthController {

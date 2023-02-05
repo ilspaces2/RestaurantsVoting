@@ -42,7 +42,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.POST, "/register", "/login").permitAll()
                 .requestMatchers("/api-docs/**", "/swagger-ui/**").permitAll()
-                .requestMatchers("/restaurants/dish/*", "/admin/**", "/restaurants/setTime").hasRole(ADMIN)
+                .requestMatchers("/restaurants/dishes/*", "/admin/**", "/restaurants/time").hasRole(ADMIN)
                 .requestMatchers(HttpMethod.POST, "/restaurants").hasRole(ADMIN)
                 .anyRequest().authenticated()
                 .and().addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

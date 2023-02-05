@@ -40,8 +40,8 @@ public class RestaurantController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @Operation(summary = "Add dish to restaurant", description = "This is for admin")
-    @PutMapping(value = "dish/{restaurantName}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Add dishes to restaurant", description = "This is for admin")
+    @PutMapping(value = "dishes/{restaurantName}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Restaurant addDish(@PathVariable String restaurantName, @RequestBody @Valid ValidateList<Dish> dishes) {
         return restaurantService.addDish(restaurantName, dishes.getList());
@@ -71,7 +71,7 @@ public class RestaurantController {
     Swagger expected pattern @date-time, but actual value is time.
      */
     @Operation(summary = "Set vote time", description = "This is for admin")
-    @GetMapping("setTime")
+    @PutMapping("time")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void setTime(@Schema(pattern = "^(?:2[0-3]|[0-1][0-9]):[0-5][0-9]$",
             defaultValue = "24-hour time, 11:00",
