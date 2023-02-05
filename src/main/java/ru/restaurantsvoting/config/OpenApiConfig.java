@@ -13,9 +13,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 //https://sabljakovich.medium.com/adding-basic-auth-authorization-option-to-openapi-swagger-documentation-java-spring-95abbede27e9
 @SecurityScheme(
-        name = "basicAuth",
+        name = "Bearer Authentication",
         type = SecuritySchemeType.HTTP,
-        scheme = "basic"
+        bearerFormat = "JWT",
+        scheme = "bearer"
 )
 @OpenAPIDefinition(
         info = @Info(
@@ -29,7 +30,7 @@ import org.springframework.context.annotation.Configuration;
                         """,
                 contact = @Contact(name = "Ilya", email = "admin@admin.ru")
         ),
-        security = @SecurityRequirement(name = "basicAuth")
+        security = @SecurityRequirement(name = "Bearer Authentication")
 )
 public class OpenApiConfig {
 
