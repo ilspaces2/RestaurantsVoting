@@ -53,7 +53,8 @@ public class RestaurantService {
     @Transactional
     public String vote(String restaurantName, int id) {
         get(restaurantName);
-        User user = userRepository.findById(id).orElseThrow();
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new NoSuchElementException(String.format("User with id: '%s' not found", id)));
         if (user.isVoted() && LocalTime.now().isAfter(time)) {
             log.info("User '{}' already voted for '{}'", user.getName(), restaurantName);
             return "\"Already voted\"";
