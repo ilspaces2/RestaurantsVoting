@@ -13,4 +13,7 @@ public class NamedDto extends BaseDto {
     @Size(min = 2, max = 120)
     protected String name;
 
+    public NamedDto(String name) {
+        this.name = name;
+    }
 }

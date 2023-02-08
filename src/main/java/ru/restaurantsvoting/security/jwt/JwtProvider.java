@@ -1,9 +1,10 @@
 package ru.restaurantsvoting.security.jwt;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SignatureException;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,16 +53,11 @@ public class JwtProvider {
     }
 
     public boolean validateAccessToken(String token) throws JwtException {
-//        try {
         Jwts.parserBuilder()
                 .setSigningKey(jwtAccessSecret)
                 .build()
                 .parseClaimsJws(token);
         return true;
-//        } catch (JwtException e) {
-//            log.error("Error validate token: {}", e.getMessage());
-//        }
-//        return false;
     }
 
     public Claims getAccessClaims(String token) {
@@ -83,8 +79,7 @@ public class JwtProvider {
                 .map(Role::valueOf)
                 .collect(Collectors.toSet());
         int id = claims.get("id", Integer.class);
-        User user = new User(login, "", false, roles);
-        user.setId(id);
+        User user = new User(id, "", login, "", roles);
         return new UsernamePasswordAuthenticationToken(new AuthUser(user), "", roles);
     }
 

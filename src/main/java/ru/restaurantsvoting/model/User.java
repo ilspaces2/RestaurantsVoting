@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,7 +13,6 @@ import java.util.Set;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
@@ -39,6 +37,21 @@ public class User extends NamedEntity {
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
+
+    public User(Integer id, String name, String email, String password, Set<Role> roles) {
+        super(id, name);
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+    }
+
+    public User(User user) {
+        this.id = user.getId();
+        this.name = user.getName();
+        this.email = user.getEmail();
+        this.password = user.getPassword();
+        this.roles = user.getRoles();
+    }
 
     @Override
     public String toString() {

@@ -3,13 +3,13 @@ package ru.restaurantsvoting.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.Getter;
+import lombok.Setter;
 
-@Value
+@Setter
+@Getter
 @EqualsAndHashCode(callSuper = true)
-@AllArgsConstructor
 public class UserDto extends NamedDto {
 
     @Email
@@ -20,6 +20,12 @@ public class UserDto extends NamedDto {
     @NotBlank
     @Size(min = 5, max = 32)
     String password;
+
+    public UserDto(String name, String email, String password) {
+        super(name);
+        this.email = email;
+        this.password = password;
+    }
 
     @Override
     public String toString() {
