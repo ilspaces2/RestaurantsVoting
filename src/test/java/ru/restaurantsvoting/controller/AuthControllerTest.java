@@ -35,7 +35,7 @@ class AuthControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void whenLoginAndBadCredentialsThenThrowException() throws Exception {
+    void whenLoginWithBadEmailThenThrowException() throws Exception {
         preform(MockMvcRequestBuilders.post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new JwtRequestLogin("admin", "admin"))))

@@ -7,7 +7,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.restaurantsvoting.dto.UserDto;
 import ru.restaurantsvoting.exception.AlreadyExistsException;
 import ru.restaurantsvoting.mapper.UserMapper;
 import ru.restaurantsvoting.model.Role;
@@ -24,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static ru.restaurantsvoting.UserTestData.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -42,91 +42,71 @@ class UserServiceTest {
 
     @Test
     void whenSaveAndUserAlreadyExistsThenThrowException() {
-        User user = getUser();
         when(userRepository.findByEmailIgnoreCase(any())).thenReturn(Optional.of(user));
         assertThatThrownBy(() -> userService.save(user)).isInstanceOf(AlreadyExistsException.class);
     }
 
     @Test
     void save() {
-        User user = getUser();
+        User newUser = getNewUser();
         when(userRepository.findByEmailIgnoreCase(any())).thenReturn(Optional.empty());
-        when(userRepository.save(any())).thenReturn(user);
-        User actualResult = userService.save(user);
-        assertThat(actualResult).isEqualTo(user);
+        when(userRepository.save(any())).thenReturn(newUser);
+        User actualResult = userService.save(newUser);
+        assertThat(actualResult).isEqualTo(newUser);
         assertThat(actualResult.getRoles()).isEqualTo(Set.of(Role.USER));
     }
 
     @Test
     void whenUpdateAndUserNotFoundByIdThenThrowException() {
         when(userRepository.findById(any())).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> userService.update(new UserDto("email", "password"), 11)).isInstanceOf(NoSuchElementException.class);
+        assertThatThrownBy(() -> userService.update(getUserDto(), BAD_ID)).isInstanceOf(NoSuchElementException.class);
     }
 
     @Test
     void update() {
-        User user = getUser();
-        UserDto userDto = new UserDto(user.getEmail(), user.getPassword());
-        userDto.setName("Ben");
-        when(userRepository.findById(any())).thenReturn(Optional.of(user));
-        when(userMapper.toModel(any())).thenReturn(user);
-        when(userRepository.save(any())).thenReturn(user);
-        User actualResult = userService.update(userDto, user.getId());
-        assertThat(actualResult).isEqualTo(user);
+        when(userRepository.findById(any())).thenReturn(Optional.of(getUpdatedUser()));
+        when(userMapper.toModel(any())).thenReturn(getUpdatedUser());
+        when(userRepository.save(any())).thenReturn(getUpdatedUser());
+        User actualResult = userService.update(getUpdatedUserDto(), USER_ID);
+        assertThat(actualResult).isEqualTo(getUpdatedUser());
     }
 
     @Test
     void whenDeleteAndUserNotFoundThenThrowException() {
         when(userRepository.findById(any())).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> userService.delete(11)).isInstanceOf(NoSuchElementException.class);
+        assertThatThrownBy(() -> userService.delete(USER_ID + 1_000)).isInstanceOf(NoSuchElementException.class);
     }
 
     @Test
     void whenDeleteAdminThenThrowException() {
-        User user = getUser();
-        user.setRoles(Set.of(Role.ADMIN));
-        when(userRepository.findById(any())).thenReturn(Optional.of(user));
-        assertThatThrownBy(() -> userService.delete(11)).isInstanceOf(IllegalArgumentException.class);
+        when(userRepository.findById(any())).thenReturn(Optional.of(admin));
+        assertThatThrownBy(() -> userService.delete(ADMIN_ID)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void delete() {
-        User user = getUser();
-        user.setRoles(Set.of(Role.USER));
         when(userRepository.findById(any())).thenReturn(Optional.of(user));
-        userService.delete(user.getId());
-        verify(userRepository).findById(user.getId());
+        userService.delete(USER_ID);
+        verify(userRepository).findById(USER_ID);
     }
 
     @Test
     void findAll() {
-        List<User> users = List.of(getUser());
-        when(userRepository.findAll()).thenReturn(users);
+        when(userRepository.findAll()).thenReturn(getUsers());
         List<User> actualResult = userService.findAll();
-        assertThat(actualResult).isEqualTo(users);
-
+        assertThat(actualResult).isEqualTo(getUsers());
     }
 
     @Test
     void whenFindByIdAndNotFoundThenThrowException() {
         when(userRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> userService.findById(getUser().getId())).isInstanceOf(NoSuchElementException.class);
+        assertThatThrownBy(() -> userService.findById(USER_ID)).isInstanceOf(NoSuchElementException.class);
     }
 
     @Test
     void findById() {
-        User user = getUser();
         when(userRepository.findById(any())).thenReturn(Optional.of(user));
-        User actualResult = userService.findById(user.getId());
+        User actualResult = userService.findById(USER_ID);
         assertThat(actualResult).isEqualTo(user);
-    }
-
-    private User getUser() {
-        User user = new User();
-        user.setId(123);
-        user.setEmail("new@user");
-        user.setName("Jack");
-        user.setPassword("pass");
-        return user;
     }
 }
