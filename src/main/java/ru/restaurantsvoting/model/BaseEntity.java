@@ -1,5 +1,6 @@
 package ru.restaurantsvoting.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
@@ -18,6 +19,7 @@ public abstract class BaseEntity {
     @Schema(hidden = true)
     protected Integer id;
 
+    @JsonIgnore
     @Schema(hidden = true)
     public boolean isNew() {
         return id == null;
