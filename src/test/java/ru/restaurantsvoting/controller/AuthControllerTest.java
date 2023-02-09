@@ -17,6 +17,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class AuthControllerTest extends AbstractControllerTest {
 
+    private final String loginUrl = "/login";
+
     @MockBean
     private JwtProvider jwtProvider;
 
@@ -24,7 +26,7 @@ class AuthControllerTest extends AbstractControllerTest {
     void login() throws Exception {
         JwtResponse token = new JwtResponse("token");
         Mockito.when(jwtProvider.generateAccessToken(any())).thenReturn(token.getAccessToken());
-        MvcResult action = preform(MockMvcRequestBuilders.post("/login")
+        MvcResult action = preform(MockMvcRequestBuilders.post(loginUrl)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new JwtRequestLogin("admin@admin.com", "admin"))))
                 .andDo(print())
@@ -36,7 +38,7 @@ class AuthControllerTest extends AbstractControllerTest {
 
     @Test
     void whenLoginWithBadEmailThenThrowException() throws Exception {
-        preform(MockMvcRequestBuilders.post("/login")
+        preform(MockMvcRequestBuilders.post(loginUrl)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new JwtRequestLogin("admin", "admin"))))
                 .andDo(print())

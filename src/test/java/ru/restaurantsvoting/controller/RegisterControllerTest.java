@@ -12,9 +12,11 @@ import static ru.restaurantsvoting.UserTestData.*;
 
 class RegisterControllerTest extends AbstractControllerTest {
 
+    private final String registerUrl = "/register";
+
     @Test
     void register() throws Exception {
-        MvcResult action = preform(MockMvcRequestBuilders.post("/register")
+        MvcResult action = preform(MockMvcRequestBuilders.post(registerUrl)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(getNewUserDto())))
                 .andExpect(status().isCreated()).andReturn();
@@ -28,7 +30,7 @@ class RegisterControllerTest extends AbstractControllerTest {
 
     @Test
     void whenRegisterAndUserAlreadyExistsThenThrowException() throws Exception {
-        preform(MockMvcRequestBuilders.post("/register")
+        preform(MockMvcRequestBuilders.post(registerUrl)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(getUserDto())))
                 .andExpect(status().isConflict());
@@ -36,7 +38,7 @@ class RegisterControllerTest extends AbstractControllerTest {
 
     @Test
     void whenRegisterAndBadEmailAndPasswordThenThrowException() throws Exception {
-        preform(MockMvcRequestBuilders.post("/register")
+        preform(MockMvcRequestBuilders.post(registerUrl)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(getBadUserDto())))
                 .andExpect(status().isUnprocessableEntity());

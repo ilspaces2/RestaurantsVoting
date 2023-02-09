@@ -11,50 +11,56 @@ import static ru.restaurantsvoting.UserTestData.*;
 
 class AdminControllerTest extends AbstractControllerTest {
 
+    private final String adminUrl = "/admin";
+
+    private final String adminUrlId = adminUrl + "/{id}";
+
+    private final String roleAdmin = "ADMIN";
+
     @Test
-    @WithMockUser(value = "admin@admin.com", password = "admin", roles = {"ADMIN"})
+    @WithMockUser(roles = {roleAdmin})
     void findAll() throws Exception {
-        preform(MockMvcRequestBuilders.get("/admin"))
+        preform(MockMvcRequestBuilders.get(adminUrl))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(getUsers())));
     }
 
     @Test
-    @WithMockUser(value = "admin@admin.com", password = "admin", roles = {"ADMIN"})
+    @WithMockUser(roles = {roleAdmin})
     void get() throws Exception {
-        preform(MockMvcRequestBuilders.get("/admin/{id}", USER_ID))
+        preform(MockMvcRequestBuilders.get(adminUrlId, USER_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(user)));
     }
 
     @Test
-    @WithMockUser(value = "admin@admin.com", password = "admin", roles = {"ADMIN"})
+    @WithMockUser(roles = {roleAdmin})
     void whenGetAndUserNotFoundThenThrowException() throws Exception {
-        preform(MockMvcRequestBuilders.get("/admin/{id}", BAD_ID))
+        preform(MockMvcRequestBuilders.get(adminUrlId, BAD_ID))
                 .andExpect(status().isNotFound());
     }
 
 
     @Test
-    @WithMockUser(value = "admin@admin.com", password = "admin", roles = {"ADMIN"})
+    @WithMockUser(roles = {roleAdmin})
     void delete() throws Exception {
-        preform(MockMvcRequestBuilders.delete("/admin/{id}", USER_ID))
+        preform(MockMvcRequestBuilders.delete(adminUrlId, USER_ID))
                 .andExpect(status().isNoContent());
-        preform(MockMvcRequestBuilders.get("/admin/{id}", USER_ID))
+        preform(MockMvcRequestBuilders.get(adminUrlId, USER_ID))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    @WithMockUser(value = "admin@admin.com", password = "admin", roles = {"ADMIN"})
+    @WithMockUser(roles = {roleAdmin})
     void whenDeleteAndUserNotFoundThenThrowException() throws Exception {
-        preform(MockMvcRequestBuilders.delete("/admin/{id}", BAD_ID))
+        preform(MockMvcRequestBuilders.delete(adminUrlId, BAD_ID))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    @WithMockUser(value = "admin@admin.com", password = "admin", roles = {"ADMIN"})
+    @WithMockUser(roles = {roleAdmin})
     void update() throws Exception {
-        preform(MockMvcRequestBuilders.put("/admin/{id}", USER_ID)
+        preform(MockMvcRequestBuilders.put(adminUrlId, USER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(getUpdatedUserDto())))
                 .andExpect(status().isNoContent())
@@ -62,20 +68,27 @@ class AdminControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithMockUser(value = "admin@admin.com", password = "admin", roles = {"ADMIN"})
+    @WithMockUser(roles = {roleAdmin})
     void whenUpdateAndUserNotFoundThenThrowException() throws Exception {
-        preform(MockMvcRequestBuilders.put("/admin/{id}", BAD_ID)
+        preform(MockMvcRequestBuilders.put(adminUrlId, BAD_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(getUpdatedUserDto())))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    @WithMockUser(value = "admin@admin.com", password = "admin", roles = {"ADMIN"})
+    @WithMockUser(roles = {roleAdmin})
     void whenUpdateWithBadEmailAndPasswordThenThrowException() throws Exception {
-        preform(MockMvcRequestBuilders.put("/admin/{id}", USER_ID)
+        preform(MockMvcRequestBuilders.put(adminUrlId, USER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(getBadUserDto())))
                 .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    @WithMockUser
+    void whenUserNotAdminThenThrowForbiddenException() throws Exception {
+        preform(MockMvcRequestBuilders.get(adminUrl))
+                .andExpect(status().isForbidden());
     }
 }
