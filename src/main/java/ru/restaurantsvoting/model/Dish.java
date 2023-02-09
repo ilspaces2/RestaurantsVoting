@@ -11,7 +11,6 @@ import org.hibernate.validator.constraints.Range;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "dishes")
@@ -20,6 +19,11 @@ public class Dish extends NamedEntity {
     @NotNull
     @Range(min = 1, max = 5000)
     private double price;
+
+    public Dish(Integer id, String name, double price) {
+        super(id, name);
+        this.price = price;
+    }
 
     @Override
     public String toString() {

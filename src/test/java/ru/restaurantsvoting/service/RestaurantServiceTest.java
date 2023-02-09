@@ -50,8 +50,7 @@ class RestaurantServiceTest {
         Restaurant restaurant = new Restaurant();
         restaurant.setId(100);
         restaurant.setName("new restaurant");
-        RestaurantDto restaurantDto = new RestaurantDto();
-        restaurantDto.setName("new restaurant");
+        RestaurantDto restaurantDto = new RestaurantDto("new restaurant");
         when(restaurantMapper.toModel(any(RestaurantDto.class))).thenReturn(restaurant);
         when(restaurantRepository.save(any(Restaurant.class))).thenReturn(restaurant);
         Restaurant actual = restaurantService.save(restaurantDto);
@@ -64,8 +63,7 @@ class RestaurantServiceTest {
         Restaurant restaurant = new Restaurant();
         restaurant.setId(100);
         restaurant.setName("new restaurant");
-        RestaurantDto restaurantDto = new RestaurantDto();
-        restaurantDto.setName("new restaurant");
+        RestaurantDto restaurantDto = new RestaurantDto("new restaurant");
         when(restaurantRepository.findByName(any())).thenReturn(Optional.of(restaurant));
         assertThatThrownBy(() -> restaurantService.save(restaurantDto)).isInstanceOf(AlreadyExistsException.class);
     }

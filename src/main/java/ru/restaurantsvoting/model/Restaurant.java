@@ -2,7 +2,6 @@ package ru.restaurantsvoting.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,7 +10,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "restaurants")
@@ -28,5 +26,11 @@ public class Restaurant extends NamedEntity {
 
     public void addDish(Dish dish) {
         dishes.add(dish);
+    }
+
+    public Restaurant(Integer id, String name, List<Dish> dishes, int votes) {
+        super(id, name);
+        this.dishes = dishes;
+        this.votes = votes;
     }
 }
