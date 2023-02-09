@@ -1,13 +1,18 @@
 package ru.restaurantsvoting;
 
-import ru.restaurantsvoting.dto.UserDto;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.restaurantsvoting.model.Role;
 import ru.restaurantsvoting.model.User;
+import ru.restaurantsvoting.security.AuthUser;
+import ru.restaurantsvoting.security.jwt.JwtProvider;
 
 import java.util.List;
 import java.util.Set;
 
 public class UserTestData {
+
+    @MockBean
+    private static JwtProvider jwtProvider;
 
     public static final int ADMIN_ID = 1;
 
@@ -30,12 +35,6 @@ public class UserTestData {
             "user1",
             Set.of(Role.USER));
 
-    public static UserDto getUserDto() {
-        return new UserDto(
-                user.getName(),
-                user.getEmail(),
-                user.getPassword());
-    }
 
     public static User getNewUser() {
         return new User(
@@ -46,12 +45,6 @@ public class UserTestData {
                 null);
     }
 
-    public static UserDto getNewUserDto() {
-        return new UserDto(
-                getNewUser().getName(),
-                getNewUser().getEmail(),
-                getNewUser().getPassword());
-    }
 
     public static User getUpdatedUser() {
         return new User(
@@ -62,21 +55,10 @@ public class UserTestData {
                 user.getRoles());
     }
 
-    public static UserDto getUpdatedUserDto() {
-        return new UserDto(
-                getUpdatedUser().getName(),
-                getUpdatedUser().getEmail(),
-                getUpdatedUser().getPassword());
-    }
-
-    public static UserDto getBadUserDto() {
-        return new UserDto(
-                getUpdatedUser().getName(),
-                "bad.com",
-                "bad");
-    }
-
     public static List<User> getUsers() {
         return List.of(admin, user);
     }
+
+
+
 }

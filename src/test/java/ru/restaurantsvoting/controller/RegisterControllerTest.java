@@ -8,7 +8,8 @@ import ru.restaurantsvoting.model.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.restaurantsvoting.UserTestData.*;
+import static ru.restaurantsvoting.UserDtoTestData.*;
+import static ru.restaurantsvoting.UserTestData.getNewUser;
 
 class RegisterControllerTest extends AbstractControllerTest {
 

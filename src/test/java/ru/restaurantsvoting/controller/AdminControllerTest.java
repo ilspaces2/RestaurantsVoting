@@ -7,6 +7,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.restaurantsvoting.UserDtoTestData.getBadUserDto;
+import static ru.restaurantsvoting.UserDtoTestData.getUpdatedUserDto;
 import static ru.restaurantsvoting.UserTestData.*;
 
 class AdminControllerTest extends AbstractControllerTest {

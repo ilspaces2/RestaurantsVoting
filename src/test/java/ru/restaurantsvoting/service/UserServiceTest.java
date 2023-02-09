@@ -23,6 +23,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static ru.restaurantsvoting.UserDtoTestData.getUpdatedUserDto;
+import static ru.restaurantsvoting.UserDtoTestData.getUserDto;
 import static ru.restaurantsvoting.UserTestData.*;
 
 @ExtendWith(MockitoExtension.class)
