@@ -2,7 +2,6 @@ package ru.restaurantsvoting.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -17,52 +16,51 @@ class AdminControllerTest extends AbstractControllerTest {
 
     private final String adminUrlId = adminUrl + "/{id}";
 
-    private final String roleAdmin = "ADMIN";
-
     @Test
-    @WithMockUser(roles = {roleAdmin})
     void findAll() throws Exception {
-        preform(MockMvcRequestBuilders.get(adminUrl))
+        preform(MockMvcRequestBuilders.get(adminUrl)
+                .header("Authorization", getJwtToken(admin)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(getUsers())));
     }
 
     @Test
-    @WithMockUser(roles = {roleAdmin})
     void get() throws Exception {
-        preform(MockMvcRequestBuilders.get(adminUrlId, USER_ID))
+        preform(MockMvcRequestBuilders.get(adminUrlId, USER_ID)
+                .header("Authorization", getJwtToken(admin)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(user)));
     }
 
     @Test
-    @WithMockUser(roles = {roleAdmin})
     void whenGetAndUserNotFoundThenThrowException() throws Exception {
-        preform(MockMvcRequestBuilders.get(adminUrlId, BAD_ID))
+        preform(MockMvcRequestBuilders.get(adminUrlId, BAD_ID)
+                .header("Authorization", getJwtToken(admin)))
                 .andExpect(status().isNotFound());
     }
 
 
     @Test
-    @WithMockUser(roles = {roleAdmin})
     void delete() throws Exception {
-        preform(MockMvcRequestBuilders.delete(adminUrlId, USER_ID))
+        preform(MockMvcRequestBuilders.delete(adminUrlId, USER_ID)
+                .header("Authorization", getJwtToken(admin)))
                 .andExpect(status().isNoContent());
-        preform(MockMvcRequestBuilders.get(adminUrlId, USER_ID))
+        preform(MockMvcRequestBuilders.get(adminUrlId, USER_ID)
+                .header("Authorization", getJwtToken(admin)))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    @WithMockUser(roles = {roleAdmin})
     void whenDeleteAndUserNotFoundThenThrowException() throws Exception {
-        preform(MockMvcRequestBuilders.delete(adminUrlId, BAD_ID))
+        preform(MockMvcRequestBuilders.delete(adminUrlId, BAD_ID)
+                .header("Authorization", getJwtToken(admin)))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    @WithMockUser(roles = {roleAdmin})
     void update() throws Exception {
         preform(MockMvcRequestBuilders.put(adminUrlId, USER_ID)
+                .header("Authorization", getJwtToken(admin))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(getUpdatedUserDto())))
                 .andExpect(status().isNoContent())
@@ -70,27 +68,34 @@ class AdminControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = {roleAdmin})
     void whenUpdateAndUserNotFoundThenThrowException() throws Exception {
         preform(MockMvcRequestBuilders.put(adminUrlId, BAD_ID)
+                .header("Authorization", getJwtToken(admin))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(getUpdatedUserDto())))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    @WithMockUser(roles = {roleAdmin})
     void whenUpdateWithBadEmailAndPasswordThenThrowException() throws Exception {
         preform(MockMvcRequestBuilders.put(adminUrlId, USER_ID)
+                .header("Authorization", getJwtToken(admin))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(getBadUserDto())))
                 .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
-    @WithMockUser
-    void whenUserNotAdminThenThrowForbiddenException() throws Exception {
-        preform(MockMvcRequestBuilders.get(adminUrl))
+    void whenUserNotAdminGetOrPutOrDeleteThenThrowForbiddenException() throws Exception {
+        String userToken = getJwtToken(user);
+        preform(MockMvcRequestBuilders.get(adminUrl)
+                .header("Authorization", userToken))
+                .andExpect(status().isForbidden());
+        preform(MockMvcRequestBuilders.put(adminUrl, USER_ID)
+                .header("Authorization", userToken))
+                .andExpect(status().isForbidden());
+        preform(MockMvcRequestBuilders.delete(adminUrl, USER_ID)
+                .header("Authorization", userToken))
                 .andExpect(status().isForbidden());
     }
 }

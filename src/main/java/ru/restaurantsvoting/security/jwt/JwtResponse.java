@@ -9,7 +9,7 @@ import lombok.*;
 @ToString
 public class JwtResponse {
 
-    private final String type = "Bearer";
+    private final String type = "Bearer ";
 
     private String accessToken;
 }
