@@ -68,7 +68,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(AlreadyExistsException.class)
     public ResponseEntity<?> userAlreadyExistsException(AlreadyExistsException ex, WebRequest request) {
-        log.error("UserAlreadyExistsException: {}", ex.getMessage());
+        log.error("AlreadyExistsException: {}", ex.getMessage());
         return createProblemDetailExceptionResponse(ex, HttpStatus.CONFLICT, request);
     }
 
