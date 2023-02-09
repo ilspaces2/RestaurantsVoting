@@ -30,6 +30,6 @@ class AuthControllerTest extends AbstractControllerTest {
         preform(MockMvcRequestBuilders.post(loginUrl)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new JwtRequestLogin("admin", "admin"))))
-                .andExpect(status().is5xxServerError());
+                .andExpect(status().isUnprocessableEntity());
     }
 }
