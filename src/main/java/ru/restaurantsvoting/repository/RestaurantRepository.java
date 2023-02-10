@@ -23,6 +23,8 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     void cancelVote(String name);
 
     @Query("from Restaurant r join fetch r.dishes")
+    Optional<Restaurant> findById(int id);
+
     Optional<Restaurant> findByName(String name);
 
     @Query("from Restaurant r left join fetch r.dishes")

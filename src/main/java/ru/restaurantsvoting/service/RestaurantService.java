@@ -52,7 +52,7 @@ public class RestaurantService {
 
     @Transactional
     public String vote(String restaurantName, int id) {
-        get(restaurantName);
+        getByName(restaurantName);
         User user = userRepository.findById(id).orElseThrow(
                 () -> new NoSuchElementException(String.format("User with id: '%s' not found", id)));
         if (user.isVoted() && LocalTime.now().isAfter(time)) {
@@ -73,16 +73,21 @@ public class RestaurantService {
 
     @Transactional
     public Restaurant addDish(String restaurantName, List<Dish> dishes) {
-        Restaurant restaurant = get(restaurantName);
+        Restaurant restaurant = getByName(restaurantName);
         dishRepository.saveAll(dishes);
         dishes.forEach(restaurant::addDish);
         log.info("Add '{}' to '{}'", dishes, restaurantName);
         return restaurantRepository.save(restaurant);
     }
 
-    public Restaurant get(String restaurantName) {
-        return restaurantRepository.findByName(restaurantName).orElseThrow(
-                () -> new NoSuchElementException(String.format("Restaurant '%s' not found", restaurantName))
+    public Restaurant get(int id) {
+        return restaurantRepository.findById(id).orElseThrow(
+                () -> new NoSuchElementException(String.format("Restaurant id: '%s' not found", id))
         );
+    }
+
+    private Restaurant getByName(String name) {
+        return restaurantRepository.findByName(name).orElseThrow(
+                () -> new NoSuchElementException(String.format("Restaurant '%s' not found", name)));
     }
 }

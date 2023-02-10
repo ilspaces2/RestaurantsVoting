@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -61,10 +60,10 @@ public class RestaurantController {
         return restaurantService.findAll();
     }
 
-    @Operation(summary = "Get restaurant")
-    @GetMapping("{restaurantName}")
-    public Restaurant get(@PathVariable String restaurantName) {
-        return restaurantService.get(restaurantName);
+    @Operation(summary = "Get restaurant bu id")
+    @GetMapping("{id}")
+    public Restaurant get(@PathVariable int id) {
+        return restaurantService.get(id);
     }
 
     /*

@@ -9,15 +9,15 @@ import java.util.List;
 public class RestaurantTestData {
 
     public static Restaurant getRestaurantOne() {
-        return new Restaurant(1, "macdonalds", List.of(new Dish(1, "beer", 10.5)), 1);
+        return new Restaurant(1, "macdonalds", new ArrayList<>(List.of(new Dish(1, "beer", 10.5))), 1);
     }
 
     public static Restaurant getRestaurantTwo() {
-        return new Restaurant(2, "kfc", List.of(), 0);
+        return new Restaurant(2, "kfc", new ArrayList<>(), 0);
     }
 
     public static Restaurant getNewRestaurant() {
-        return new Restaurant(3, "Bar", List.of(), 0);
+        return new Restaurant(3, "Bar", null, 0);
     }
 
     public static List<Restaurant> getRestaurants() {

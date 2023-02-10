@@ -4,9 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.restaurantsvoting.dto.RestaurantDto;
-import ru.restaurantsvoting.model.Restaurant;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.restaurantsvoting.RestaurantTestData.*;
@@ -17,12 +15,12 @@ class RestaurantControllerTest extends AbstractControllerTest {
 
     private final String restaurantUrl = "/restaurants";
 
-//    @Test
+    @Test
     void save() throws Exception {
         preform(MockMvcRequestBuilders.post(restaurantUrl)
                 .header("Authorization", getJwtToken(admin))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new RestaurantDto("Bar"))))
+                .content(objectMapper.writeValueAsString(new RestaurantDto(getNewRestaurant().getName()))))
                 .andExpect(status().isCreated())
                 .andExpect(content().string(objectMapper.writeValueAsString(getNewRestaurant())));
     }
@@ -45,7 +43,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
 
     @Test
     void get() throws Exception {
-        preform(MockMvcRequestBuilders.get(restaurantUrl + "/{restaurantName}", getRestaurantOne().getName())
+        preform(MockMvcRequestBuilders.get(restaurantUrl + "/{id}", getRestaurantOne().getId())
                 .header("Authorization", getJwtToken(user)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(getRestaurantOne())));
