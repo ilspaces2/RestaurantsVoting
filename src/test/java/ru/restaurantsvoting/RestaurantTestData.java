@@ -23,4 +23,10 @@ public class RestaurantTestData {
     public static List<Restaurant> getRestaurants() {
         return List.of(getRestaurantOne(), getRestaurantTwo());
     }
+
+    public static List<Dish> getNewDishes() {
+        return List.of(
+                new Dish(3, "Coup", 34.55),
+                new Dish(4, "Tea", 15));
+    }
 }

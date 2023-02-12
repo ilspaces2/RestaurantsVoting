@@ -1,5 +1,6 @@
 package ru.restaurantsvoting.service;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,7 @@ public class RestaurantService {
     private final UserRepository userRepository;
 
     @Setter
+    @Getter
     private LocalTime time = LocalTime.of(11, 0, 0);
 
     public Restaurant save(RestaurantDto restaurantDTO) {

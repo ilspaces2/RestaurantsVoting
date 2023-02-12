@@ -3,7 +3,7 @@ package ru.restaurantsvoting.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +14,7 @@ import org.hibernate.validator.constraints.Range;
 @NoArgsConstructor
 @Entity
 @Table(name = "dishes")
+@EqualsAndHashCode(callSuper = true)
 public class Dish extends NamedEntity {
 
     @NotNull
