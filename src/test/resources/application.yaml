@@ -11,3 +11,7 @@ spring:
       format_sql: true
       default_batch_fetch_size: 20
       jdbc.batch_size: 20
+
+
+access: qBTmv4oXFFR2GwjexDJ4t6fsIUIUhhXqlktXjXdkcyygs8nPVEwMfo29VDRRepYDVV5IkIxBMzr7OEHXEHd37w==
+accessTimeOfSeconds: 6000
