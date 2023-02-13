@@ -35,7 +35,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     void saveRestaurant() throws Exception {
         preform(MockMvcRequestBuilders.post(restaurantUrl)
-                .header("Authorization", getJwtToken(admin))
+                .header(authorization, getJwtToken(admin))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new RestaurantDto(getNewRestaurant().getName()))))
                 .andExpect(status().isCreated())
@@ -45,7 +45,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     void whenSaveRestaurantNotAdminRoleThenTrowForbidden() throws Exception {
         preform(MockMvcRequestBuilders.post(restaurantUrl)
-                .header("Authorization", getJwtToken(user))
+                .header(authorization, getJwtToken(user))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new RestaurantDto(getNewRestaurant().getName()))))
                 .andExpect(status().isForbidden());
@@ -54,7 +54,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     void whenSaveRestaurantWithBlankName() throws Exception {
         preform(MockMvcRequestBuilders.post(restaurantUrl)
-                .header("Authorization", getJwtToken(admin))
+                .header(authorization, getJwtToken(admin))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new RestaurantDto(" "))))
                 .andExpect(status().isUnprocessableEntity());
@@ -63,7 +63,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     void whenSaveRestaurantWithNameLengthMore120() throws Exception {
         preform(MockMvcRequestBuilders.post(restaurantUrl)
-                .header("Authorization", getJwtToken(admin))
+                .header(authorization, getJwtToken(admin))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new RestaurantDto("a".repeat(130)))))
                 .andExpect(status().isUnprocessableEntity());
@@ -72,7 +72,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     void whenSaveRestaurantWithNameLengthLess2() throws Exception {
         preform(MockMvcRequestBuilders.post(restaurantUrl)
-                .header("Authorization", getJwtToken(admin))
+                .header(authorization, getJwtToken(admin))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new RestaurantDto("a"))))
                 .andExpect(status().isUnprocessableEntity());
@@ -81,7 +81,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     void whenSaveRestaurantAndNameAlreadyExistsThenThrowExceptionsAlreadyExists() throws Exception {
         preform(MockMvcRequestBuilders.post(restaurantUrl)
-                .header("Authorization", getJwtToken(admin))
+                .header(authorization, getJwtToken(admin))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new RestaurantDto(getRestaurantOne().getName()))))
                 .andExpect(status().isConflict());
@@ -96,7 +96,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
                 getRestaurantTwo().getVotes()
         );
         preform(MockMvcRequestBuilders.put(addDishes, restaurant.getName())
-                .header("Authorization", getJwtToken(admin))
+                .header(authorization, getJwtToken(admin))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(getNewDishes())))
                 .andExpect(status().isAccepted())
@@ -106,7 +106,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     void whenAddDishToRestaurantNotAdminRoleThenTrowForbidden() throws Exception {
         preform(MockMvcRequestBuilders.put(addDishes, getRestaurantTwo().getName())
-                .header("Authorization", getJwtToken(user))
+                .header(authorization, getJwtToken(user))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(getNewDishes())))
                 .andExpect(status().isForbidden());
@@ -115,7 +115,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     void whenAddDishToRestaurantAndRestaurantNotFoundThenTrowNoSuchElement() throws Exception {
         preform(MockMvcRequestBuilders.put(addDishes, "Not found name")
-                .header("Authorization", getJwtToken(admin))
+                .header(authorization, getJwtToken(admin))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(getNewDishes())))
                 .andExpect(status().isNotFound());
@@ -124,7 +124,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     void whenAddDishToRestaurantAndDishNotValid() throws Exception {
         preform(MockMvcRequestBuilders.put(addDishes, getRestaurantTwo().getName())
-                .header("Authorization", getJwtToken(admin))
+                .header(authorization, getJwtToken(admin))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(List.of(new Dish(null, "", 6000)))))
                 .andExpect(status().isUnprocessableEntity());
@@ -140,7 +140,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
         );
         User votedUser = new User(user);
         preform(MockMvcRequestBuilders.put(voteForRestaurant, restaurant.getName())
-                .header("Authorization", getJwtToken(votedUser)))
+                .header(authorization, getJwtToken(votedUser)))
                 .andExpect(status().isAccepted())
                 .andExpect(content().string("\"Voted\""));
         assertThat(restaurantService.get(restaurant.getId()).getVotes()).isEqualTo(restaurant.getVotes());
@@ -150,7 +150,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     void whenVoteAndRestaurantNotFoundThenTrowNoSuchElement() throws Exception {
         preform(MockMvcRequestBuilders.put(voteForRestaurant, "Not found name")
-                .header("Authorization", getJwtToken(user)))
+                .header(authorization, getJwtToken(user)))
                 .andExpect(status().isNotFound());
     }
 
@@ -166,10 +166,10 @@ class RestaurantControllerTest extends AbstractControllerTest {
         restaurantService.setTime(LocalTime.now().plusMinutes(5));
         /* do vote first */
         preform(MockMvcRequestBuilders.put(voteForRestaurant, restaurant.getName())
-                .header("Authorization", getJwtToken(votedUser)));
+                .header(authorization, getJwtToken(votedUser)));
         /* do vote second, before vote time */
         preform(MockMvcRequestBuilders.put(voteForRestaurant, restaurant.getName())
-                .header("Authorization", getJwtToken(votedUser)))
+                .header(authorization, getJwtToken(votedUser)))
                 .andExpect(status().isAccepted())
                 .andExpect(content().string("\"Canceled vote\""));
         assertThat(restaurantService.get(restaurant.getId()).getVotes()).isEqualTo(restaurant.getVotes());
@@ -188,10 +188,10 @@ class RestaurantControllerTest extends AbstractControllerTest {
         restaurantService.setTime(LocalTime.now().minusMinutes(5));
         /* do vote first*/
         preform(MockMvcRequestBuilders.put(voteForRestaurant, restaurant.getName())
-                .header("Authorization", getJwtToken(votedUser)));
+                .header(authorization, getJwtToken(votedUser)));
         /* do vote second, after vote time*/
         preform(MockMvcRequestBuilders.put(voteForRestaurant, restaurant.getName())
-                .header("Authorization", getJwtToken(votedUser)))
+                .header(authorization, getJwtToken(votedUser)))
                 .andExpect(status().isAccepted())
                 .andExpect(content().string("\"Already voted\""));
         assertThat(restaurantService.get(restaurant.getId()).getVotes()).isEqualTo(restaurant.getVotes());
@@ -201,7 +201,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     void findAll() throws Exception {
         preform(MockMvcRequestBuilders.get(restaurantUrl)
-                .header("Authorization", getJwtToken(user)))
+                .header(authorization, getJwtToken(user)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(getRestaurants())));
     }
@@ -209,7 +209,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     void getRestaurant() throws Exception {
         preform(MockMvcRequestBuilders.get(restaurantUrl + "/{id}", getRestaurantTwo().getId())
-                .header("Authorization", getJwtToken(user)))
+                .header(authorization, getJwtToken(user)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(getRestaurantTwo())));
     }
@@ -217,14 +217,14 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     void whenGetRestaurantAndNotFoundThenTrowNoSuchElement() throws Exception {
         preform(MockMvcRequestBuilders.get(restaurantUrl + "/{id}", BAD_ID)
-                .header("Authorization", getJwtToken(user)))
+                .header(authorization, getJwtToken(user)))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void setTime() throws Exception {
         preform(MockMvcRequestBuilders.put(restaurantUrl + "/time")
-                .header("Authorization", getJwtToken(admin))
+                .header(authorization, getJwtToken(admin))
                 .param("time", "14:45"))
                 .andExpect(status().isAccepted());
         assertThat(restaurantService.getTime()).isEqualTo("14:45");

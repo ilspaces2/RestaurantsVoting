@@ -139,4 +139,18 @@ class RestaurantServiceTest {
         Restaurant actualResult = restaurantService.addDish(restaurant.getName(), dishes);
         assertThat(actualResult.getDishes()).isEqualTo(dishes);
     }
+
+    @Test
+    void whenGetRestaurant() {
+        Restaurant restaurant = getRestaurantOne();
+        when(restaurantRepository.findById(restaurant.getId().intValue())).thenReturn(Optional.of(restaurant));
+        Restaurant actualResult = restaurantService.get(restaurant.getId());
+        assertThat(actualResult).isEqualTo(restaurant);
+    }
+
+    @Test
+    void whenGetRestaurantAndNotFound() {
+        when(restaurantRepository.findById(BAD_ID)).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> restaurantService.get(BAD_ID)).isInstanceOf(NoSuchElementException.class);
+    }
 }

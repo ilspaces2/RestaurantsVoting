@@ -1,3 +1,9 @@
+DELETE FROM user_roles;
+DELETE FROM users;
+DELETE FROM RESTAURANT_DISHES;
+DELETE FROM DISHES;
+DELETE FROM RESTAURANTS;
+
 insert into USERS (EMAIL, NAME, PASSWORD,VOTED)
 values ('admin@admin.com', 'admin','{noop}admin', false );
 insert into USERS (EMAIL, NAME, PASSWORD,VOTED)

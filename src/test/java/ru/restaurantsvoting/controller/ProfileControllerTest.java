@@ -18,20 +18,19 @@ class ProfileControllerTest extends AbstractControllerTest {
     @Test
     void delete() throws Exception {
         preform(MockMvcRequestBuilders.delete(profileUrl)
-                .header("Authorization", getJwtToken(user)))
+                .header(authorization, getJwtToken(user)))
                 .andExpect(status().isNoContent());
         preform(MockMvcRequestBuilders.get(profileUrl, USER_ID)
-                .header("Authorization", getJwtToken(user)))
+                .header(authorization, getJwtToken(user)))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void update() throws Exception {
         preform(MockMvcRequestBuilders.put(profileUrl)
-                .header("Authorization", getJwtToken(user))
+                .header(authorization, getJwtToken(user))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(getUpdatedUserDto())))
-                .andDo(print())
                 .andExpect(status().isNoContent())
                 .andExpect(content().string(objectMapper.writeValueAsString(getUpdatedUser())));
 
@@ -40,7 +39,7 @@ class ProfileControllerTest extends AbstractControllerTest {
     @Test
     void whenUpdateWithBadEmailAndPasswordThenThrowException() throws Exception {
         preform(MockMvcRequestBuilders.put(profileUrl)
-                .header("Authorization", getJwtToken(user))
+                .header(authorization, getJwtToken(user))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(getBadUserDto())))
                 .andExpect(status().isUnprocessableEntity());
@@ -49,7 +48,7 @@ class ProfileControllerTest extends AbstractControllerTest {
     @Test
     void get() throws Exception {
         preform(MockMvcRequestBuilders.get(profileUrl)
-                .header("Authorization", getJwtToken(user)))
+                .header(authorization, getJwtToken(user)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(user)));
     }
@@ -57,14 +56,14 @@ class ProfileControllerTest extends AbstractControllerTest {
     @Test
     void whenBadToken() throws Exception {
         preform(MockMvcRequestBuilders.get(profileUrl)
-                .header("Authorization", "token without roles"))
+                .header(authorization, "token without roles"))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     void whenIncorrectToken() throws Exception {
         preform(MockMvcRequestBuilders.get(profileUrl)
-                .header("Authorization", getJwtToken(user) + "incorrect"))
+                .header(authorization, getJwtToken(user) + "incorrect"))
                 .andExpect(status().isBadRequest());
     }
 }

@@ -19,7 +19,7 @@ class AdminControllerTest extends AbstractControllerTest {
     @Test
     void findAll() throws Exception {
         preform(MockMvcRequestBuilders.get(adminUrl)
-                .header("Authorization", getJwtToken(admin)))
+                .header(authorization, getJwtToken(admin)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(getUsers())));
     }
@@ -27,7 +27,7 @@ class AdminControllerTest extends AbstractControllerTest {
     @Test
     void get() throws Exception {
         preform(MockMvcRequestBuilders.get(adminUrlId, USER_ID)
-                .header("Authorization", getJwtToken(admin)))
+                .header(authorization, getJwtToken(admin)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(user)));
     }
@@ -35,32 +35,31 @@ class AdminControllerTest extends AbstractControllerTest {
     @Test
     void whenGetAndUserNotFoundThenThrowException() throws Exception {
         preform(MockMvcRequestBuilders.get(adminUrlId, BAD_ID)
-                .header("Authorization", getJwtToken(admin)))
+                .header(authorization, getJwtToken(admin)))
                 .andExpect(status().isNotFound());
     }
-
 
     @Test
     void delete() throws Exception {
         preform(MockMvcRequestBuilders.delete(adminUrlId, USER_ID)
-                .header("Authorization", getJwtToken(admin)))
+                .header(authorization, getJwtToken(admin)))
                 .andExpect(status().isNoContent());
         preform(MockMvcRequestBuilders.get(adminUrlId, USER_ID)
-                .header("Authorization", getJwtToken(admin)))
+                .header(authorization, getJwtToken(admin)))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void whenDeleteAndUserNotFoundThenThrowException() throws Exception {
         preform(MockMvcRequestBuilders.delete(adminUrlId, BAD_ID)
-                .header("Authorization", getJwtToken(admin)))
+                .header(authorization, getJwtToken(admin)))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void update() throws Exception {
         preform(MockMvcRequestBuilders.put(adminUrlId, USER_ID)
-                .header("Authorization", getJwtToken(admin))
+                .header(authorization, getJwtToken(admin))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(getUpdatedUserDto())))
                 .andExpect(status().isNoContent())
@@ -70,7 +69,7 @@ class AdminControllerTest extends AbstractControllerTest {
     @Test
     void whenUpdateAndUserNotFoundThenThrowException() throws Exception {
         preform(MockMvcRequestBuilders.put(adminUrlId, BAD_ID)
-                .header("Authorization", getJwtToken(admin))
+                .header(authorization, getJwtToken(admin))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(getUpdatedUserDto())))
                 .andExpect(status().isNotFound());
@@ -79,7 +78,7 @@ class AdminControllerTest extends AbstractControllerTest {
     @Test
     void whenUpdateWithBadEmailAndPasswordThenThrowException() throws Exception {
         preform(MockMvcRequestBuilders.put(adminUrlId, USER_ID)
-                .header("Authorization", getJwtToken(admin))
+                .header(authorization, getJwtToken(admin))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(getBadUserDto())))
                 .andExpect(status().isUnprocessableEntity());
@@ -89,13 +88,13 @@ class AdminControllerTest extends AbstractControllerTest {
     void whenUserNotAdminGetOrPutOrDeleteThenThrowForbiddenException() throws Exception {
         String userToken = getJwtToken(user);
         preform(MockMvcRequestBuilders.get(adminUrl)
-                .header("Authorization", userToken))
+                .header(authorization, userToken))
                 .andExpect(status().isForbidden());
         preform(MockMvcRequestBuilders.put(adminUrl, USER_ID)
-                .header("Authorization", userToken))
+                .header(authorization, userToken))
                 .andExpect(status().isForbidden());
         preform(MockMvcRequestBuilders.delete(adminUrl, USER_ID)
-                .header("Authorization", userToken))
+                .header(authorization, userToken))
                 .andExpect(status().isForbidden());
     }
 }
