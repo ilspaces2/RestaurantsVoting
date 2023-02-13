@@ -15,9 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ru.restaurantsvoting.handler.FilterExceptionHandler;
-import ru.restaurantsvoting.security.jwt.JwtFilter;
 import ru.restaurantsvoting.model.Role;
 import ru.restaurantsvoting.security.UserDetailsServiceImpl;
+import ru.restaurantsvoting.security.jwt.JwtFilter;
 
 @Configuration
 @EnableWebSecurity

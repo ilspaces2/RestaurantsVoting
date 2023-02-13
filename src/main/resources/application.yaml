@@ -24,6 +24,7 @@ logging:
 
 springdoc:
   api-docs.path: /api-docs
+  swagger-ui.path: /swagger-ui
 
 access: qBTmv4oXFFR2GwjexDJ4t6fsIUIUhhXqlktXjXdkcyygs8nPVEwMfo29VDRRepYDVV5IkIxBMzr7OEHXEHd37w==
 accessTimeOfSeconds: 6000
