@@ -16,7 +16,7 @@ import lombok.Setter;
 public abstract class NamedEntity extends BaseEntity {
 
     @NotBlank
-    @Size(max = 120)
+    @Size(min = 2, max = 120)
     protected String name;
 
     public NamedEntity(Integer id, String name) {

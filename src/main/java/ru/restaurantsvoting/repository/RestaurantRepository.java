@@ -22,7 +22,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     @Query("update Restaurant set votes=votes-1 where name=:name")
     void cancelVote(String name);
 
-    @Query("from Restaurant r join fetch r.dishes")
+    @Query("from Restaurant r left join fetch r.dishes where r.id=:id")
     Optional<Restaurant> findById(int id);
 
     Optional<Restaurant> findByName(String name);

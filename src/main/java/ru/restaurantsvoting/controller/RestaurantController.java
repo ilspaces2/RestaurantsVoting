@@ -60,7 +60,7 @@ public class RestaurantController {
         return restaurantService.findAll();
     }
 
-    @Operation(summary = "Get restaurant bu id")
+    @Operation(summary = "Get restaurant by id")
     @GetMapping("{id}")
     public Restaurant get(@PathVariable int id) {
         return restaurantService.get(id);
