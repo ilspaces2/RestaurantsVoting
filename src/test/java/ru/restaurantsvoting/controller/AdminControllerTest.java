@@ -62,7 +62,7 @@ class AdminControllerTest extends AbstractControllerTest {
                 .header(authorization, getJwtToken(admin))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(getUpdatedUserDto())))
-                .andExpect(status().isNoContent())
+                .andExpect(status().isAccepted())
                 .andExpect(content().string(objectMapper.writeValueAsString(getUpdatedUser())));
     }
 

@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,15 +31,30 @@ public class AuthController {
                       "password": "string"
                     }
                     """)))
-    @ApiResponse(
-            responseCode = "200",
-            content = @Content(examples =
-            @ExampleObject(value = """
-                    {
-                      "type": "string",
-                      "accessToken": "string"
-                    }
-                    """)))
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200",
+                            content = @Content(examples =
+                            @ExampleObject(value = """
+                                    {
+                                      "type": "string",
+                                      "accessToken": "string"
+                                    }
+                                    """))),
+                    @ApiResponse(responseCode = "422",
+                            description = "Bad credentials error",
+                            content = @Content(examples =
+                            @ExampleObject(value = """
+                                    {
+                                      "type": "about:blank",
+                                      "title": "Unprocessable Entity",
+                                      "status": 422,
+                                      "detail": "Неверные учетные данные пользователя",
+                                      "instance": "/login"
+                                    }
+                                    """))
+                    )
+            })
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public JwtResponse login(@RequestBody JwtRequestLogin authRequest) {

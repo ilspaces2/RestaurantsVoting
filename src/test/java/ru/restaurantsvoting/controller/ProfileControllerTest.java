@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.restaurantsvoting.UserDtoTestData.getBadUserDto;
@@ -31,7 +30,7 @@ class ProfileControllerTest extends AbstractControllerTest {
                 .header(authorization, getJwtToken(user))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(getUpdatedUserDto())))
-                .andExpect(status().isNoContent())
+                .andExpect(status().isAccepted())
                 .andExpect(content().string(objectMapper.writeValueAsString(getUpdatedUser())));
 
     }

@@ -1,7 +1,11 @@
 package ru.restaurantsvoting.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +26,9 @@ import java.net.URI;
 import java.time.LocalTime;
 import java.util.List;
 
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
+        @ApiResponse(responseCode = "400", description = "Token error", content = @Content)})
 @Tag(name = "Restaurant", description = "The Restaurant API")
 @RestController
 @RequestMapping(value = "/restaurants", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -30,6 +37,35 @@ public class RestaurantController {
 
     private final RestaurantService restaurantService;
 
+    @ApiResponse(
+            responseCode = "422",
+            description = "Validate error",
+            content = @Content(examples =
+            @ExampleObject(value = """
+                    {
+                      "type": "about:blank",
+                      "title": "Unprocessable Entity",
+                      "status": 422,
+                      "detail": "Invalid request content.",
+                      "instance": "/restaurants",
+                      "invalid_params": {
+                        "name": "размер должен находиться в диапазоне от 2 до 120"
+                      }
+                    }
+                    """)))
+    @ApiResponse(
+            responseCode = "409",
+            description = "Already exists",
+            content = @Content(examples =
+            @ExampleObject(value = """
+                    {
+                      "type": "about:blank",
+                      "title": "Conflict",
+                      "status": 409,
+                      "detail": "Restaurant already exists with name 'kfc'",
+                      "instance": "/restaurants"
+                    }
+                    """)))
     @Operation(summary = "Add restaurant", description = "This is for admin")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
@@ -40,6 +76,46 @@ public class RestaurantController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            required = true,
+            content = @Content(schema =
+            @Schema(example = """
+                    [
+                      {
+                        "name": "string",
+                        "price": 1
+                      }
+                    ]
+                    """)))
+    @ApiResponse(
+            responseCode = "404",
+            description = "Not found restaurant",
+            content = @Content(examples =
+            @ExampleObject(value = """
+                    {
+                      "type": "about:blank",
+                      "title": "Not Found",
+                      "status": 404,
+                      "detail": "Restaurant 'kf' not found",
+                      "instance": "/restaurants/dishes/kf"
+                    }
+                    """)))
+    @ApiResponse(
+            responseCode = "422",
+            description = "Validate error",
+            content = @Content(examples =
+            @ExampleObject(value = """
+                    {
+                      "type": "about:blank",
+                      "title": "Unprocessable Entity",
+                      "status": 422,
+                      "detail": "Invalid request content.",
+                      "instance": "/restaurants/dishes/kfc",
+                      "invalid_params": {
+                        "list[0].price": "должно находиться в диапазоне от 1 до 5000"
+                        }
+                    }
+                    """)))
     @Operation(summary = "Add dishes to restaurant", description = "This is for admin")
     @PutMapping(value = "dishes/{restaurantName}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.ACCEPTED)
@@ -47,6 +123,19 @@ public class RestaurantController {
         return restaurantService.addDish(restaurantName, dishes.getList());
     }
 
+    @ApiResponse(
+            responseCode = "404",
+            description = "Not found restaurant",
+            content = @Content(examples =
+            @ExampleObject(value = """
+                    {
+                      "type": "about:blank",
+                      "title": "Not Found",
+                      "status": 404,
+                      "detail": "Restaurant 'kf' not found",
+                      "instance": "/restaurants/dishes/kf"
+                    }
+                    """)))
     @Operation(summary = "Vote to restaurant")
     @PutMapping("vote/{restaurantName}")
     @ResponseStatus(HttpStatus.ACCEPTED)
@@ -56,12 +145,27 @@ public class RestaurantController {
 
     @Operation(summary = "Get all restaurants")
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public List<Restaurant> findAll() {
         return restaurantService.findAll();
     }
 
+    @ApiResponse(
+            responseCode = "404",
+            description = "Not found restaurant",
+            content = @Content(examples =
+            @ExampleObject(value = """
+                    {
+                      "type": "about:blank",
+                      "title": "Not Found",
+                      "status": 404,
+                      "detail": "Restaurant id: '12' not found",
+                      "instance": "/restaurants/12"
+                    }
+                    """)))
     @Operation(summary = "Get restaurant by id")
     @GetMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
     public Restaurant get(@PathVariable int id) {
         return restaurantService.get(id);
     }

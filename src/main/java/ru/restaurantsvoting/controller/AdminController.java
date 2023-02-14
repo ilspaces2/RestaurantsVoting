@@ -1,6 +1,10 @@
 package ru.restaurantsvoting.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +17,9 @@ import ru.restaurantsvoting.service.UserService;
 
 import java.util.List;
 
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
+        @ApiResponse(responseCode = "400", description = "Token error", content = @Content)})
 @Tag(name = "Admin", description = "The Admin API")
 @RestController
 @RequestMapping(value = "/admin", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -23,16 +30,44 @@ public class AdminController {
 
     @Operation(summary = "Gets all users")
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public List<User> findAll() {
         return userService.findAll();
     }
 
+    @ApiResponse(
+            responseCode = "404",
+            description = "Not found user",
+            content = @Content(examples =
+            @ExampleObject(value = """
+                    {
+                      "type": "about:blank",
+                      "title": "Not Found",
+                      "status": 404,
+                      "detail": "User with id = 12 not found",
+                      "instance": "/admin/12"
+                    }
+                    """)))
     @Operation(summary = "Get user")
     @GetMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
     public User get(@PathVariable int id) {
         return userService.findById(id);
     }
 
+    @ApiResponse(
+            responseCode = "404",
+            description = "Not found user",
+            content = @Content(examples =
+            @ExampleObject(value = """
+                    {
+                      "type": "about:blank",
+                      "title": "Not Found",
+                      "status": 404,
+                      "detail": "User with id = 12 not found",
+                      "instance": "/admin/12"
+                    }
+                    """)))
     @Operation(summary = "Delete user")
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -40,9 +75,38 @@ public class AdminController {
         userService.delete(id);
     }
 
+    @ApiResponse(
+            responseCode = "422",
+            description = "Validate error",
+            content = @Content(examples =
+            @ExampleObject(value = """
+                    {
+                      "type": "about:blank",
+                      "title": "Unprocessable Entity",
+                      "status": 422,
+                      "detail": "Invalid request content.",
+                      "instance": "/register",
+                      "invalid_params": {
+                        "email": "должно иметь формат адреса электронной почты"
+                      }
+                    }
+                    """)))
+    @ApiResponse(
+            responseCode = "404",
+            description = "Not found user",
+            content = @Content(examples =
+            @ExampleObject(value = """
+                    {
+                      "type": "about:blank",
+                      "title": "Not Found",
+                      "status": 404,
+                      "detail": "User with id = 12 not found",
+                      "instance": "/admin/12"
+                    }
+                    """)))
     @Operation(summary = "Update user")
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public User update(@RequestBody @Valid UserDto userDTO, @PathVariable int id) {
         return userService.update(userDTO, id);
     }

@@ -1,6 +1,10 @@
 package ru.restaurantsvoting.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +17,9 @@ import ru.restaurantsvoting.model.User;
 import ru.restaurantsvoting.security.AuthUser;
 import ru.restaurantsvoting.service.UserService;
 
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
+        @ApiResponse(responseCode = "400", description = "Token error", content = @Content)})
 @Tag(name = "Profile", description = "The User API")
 @RestController
 @RequestMapping(value = "/profile", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -28,15 +35,32 @@ public class ProfileController {
         userService.delete(authUser.getId());
     }
 
+    @ApiResponse(
+            responseCode = "422",
+            description = "Validate error",
+            content = @Content(examples =
+            @ExampleObject(value = """
+                    {
+                      "type": "about:blank",
+                      "title": "Unprocessable Entity",
+                      "status": 422,
+                      "detail": "Invalid request content.",
+                      "instance": "/register",
+                      "invalid_params": {
+                        "email": "должно иметь формат адреса электронной почты"
+                      }
+                    }
+                    """)))
     @Operation(summary = "Update profile")
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public User update(@RequestBody @Valid UserDto userDTO, @AuthenticationPrincipal AuthUser authUser) {
         return userService.update(userDTO, authUser.getId());
     }
 
     @Operation(summary = "Get profile")
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public User get(@AuthenticationPrincipal AuthUser authUser) {
         return userService.findById(authUser.getId());
     }
