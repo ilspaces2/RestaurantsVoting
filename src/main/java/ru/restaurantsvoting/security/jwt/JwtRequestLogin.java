@@ -2,14 +2,16 @@ package ru.restaurantsvoting.security.jwt;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class JwtRequestLogin {
 
-    private final String email;
+    private String email;
 
-    private final String password;
+    private String password;
 }
