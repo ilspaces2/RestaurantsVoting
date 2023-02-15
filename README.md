@@ -1,5 +1,5 @@
 [![Java CI with Maven](https://github.com/ilspaces2/Restaurants_voting/actions/workflows/maven.yml/badge.svg)](https://github.com/ilspaces2/Restaurants_voting/actions/workflows/maven.yml)
-[![codecov](https://codecov.io/gh/ilspaces2/Restaurants_voting/branch/main/graph/badge.svg?token=448NAH4QE4)](https://codecov.io/gh/ilspaces2/Restaurants_voting)
+[![codecov](https://codecov.io/gh/ilspaces2/Restaurants_voting/branch/master/graph/badge.svg?token=448NAH4QE4)](https://codecov.io/gh/ilspaces2/Restaurants_voting)
 # RestaurantsVoting
 ### Technical requirement: 
 Design and implement a REST API using Hibernate/Spring/SpringMVC (Spring-Boot preferred!) **without frontend**.
