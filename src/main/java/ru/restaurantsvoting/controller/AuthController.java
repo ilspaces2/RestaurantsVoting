@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -51,11 +52,27 @@ public class AuthController {
                               "detail": "Неверные учетные данные пользователя",
                               "instance": "/login"
                             }
+                            """))),
+            @ApiResponse(
+                    responseCode = "422",
+                    description = "Validate error",
+                    content = @Content(examples =
+                    @ExampleObject(value = """
+                            {
+                              "type": "about:blank",
+                              "title": "Unprocessable Entity",
+                              "status": 422,
+                              "detail": "Invalid request content.",
+                              "instance": "/register",
+                              "invalid_params": {
+                                "email": "должно иметь формат адреса электронной почты"
+                              }
+                            }
                             """)))
     })
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public JwtResponse login(@RequestBody JwtRequestLogin authRequest) {
+    public JwtResponse login(@Valid @RequestBody JwtRequestLogin authRequest) {
         return authService.login(authRequest);
     }
 }

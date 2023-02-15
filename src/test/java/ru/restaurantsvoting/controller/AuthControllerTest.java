@@ -32,4 +32,12 @@ class AuthControllerTest extends AbstractControllerTest {
                 .content(objectMapper.writeValueAsString(new JwtRequestLogin("admin", "admin"))))
                 .andExpect(status().isUnprocessableEntity());
     }
+
+    @Test
+    void whenUserNotFoundThenThrowException() throws Exception {
+        preform(MockMvcRequestBuilders.post(loginUrl)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new JwtRequestLogin("admin@user.com", "adminUser"))))
+                .andExpect(status().isUnprocessableEntity());
+    }
 }
