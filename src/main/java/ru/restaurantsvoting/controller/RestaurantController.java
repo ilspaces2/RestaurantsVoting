@@ -26,10 +26,10 @@ import java.net.URI;
 import java.time.LocalTime;
 import java.util.List;
 
+@Tag(name = "Restaurant", description = "The Restaurant API")
 @ApiResponses(value = {
         @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
         @ApiResponse(responseCode = "400", description = "Token error", content = @Content)})
-@Tag(name = "Restaurant", description = "The Restaurant API")
 @RestController
 @RequestMapping(value = "/restaurants", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
@@ -37,36 +37,38 @@ public class RestaurantController {
 
     private final RestaurantService restaurantService;
 
-    @ApiResponse(
-            responseCode = "422",
-            description = "Validate error",
-            content = @Content(examples =
-            @ExampleObject(value = """
-                    {
-                      "type": "about:blank",
-                      "title": "Unprocessable Entity",
-                      "status": 422,
-                      "detail": "Invalid request content.",
-                      "instance": "/restaurants",
-                      "invalid_params": {
-                        "name": "размер должен находиться в диапазоне от 2 до 120"
-                      }
-                    }
-                    """)))
-    @ApiResponse(
-            responseCode = "409",
-            description = "Already exists",
-            content = @Content(examples =
-            @ExampleObject(value = """
-                    {
-                      "type": "about:blank",
-                      "title": "Conflict",
-                      "status": 409,
-                      "detail": "Restaurant already exists with name 'kfc'",
-                      "instance": "/restaurants"
-                    }
-                    """)))
     @Operation(summary = "Add restaurant", description = "This is for admin")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "422",
+                    description = "Validate error",
+                    content = @Content(examples =
+                    @ExampleObject(value = """
+                            {
+                              "type": "about:blank",
+                              "title": "Unprocessable Entity",
+                              "status": 422,
+                              "detail": "Invalid request content.",
+                              "instance": "/restaurants",
+                              "invalid_params": {
+                                "name": "размер должен находиться в диапазоне от 2 до 120"
+                              }
+                            }
+                            """))),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Already exists",
+                    content = @Content(examples =
+                    @ExampleObject(value = """
+                            {
+                              "type": "about:blank",
+                              "title": "Conflict",
+                              "status": 409,
+                              "detail": "Restaurant already exists with name 'kfc'",
+                              "instance": "/restaurants"
+                            }
+                            """)))
+    })
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Restaurant> save(@Valid @RequestBody RestaurantDto restaurantDto) {
@@ -76,6 +78,7 @@ public class RestaurantController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
+    @Operation(summary = "Add dishes to restaurant", description = "This is for admin")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
             required = true,
             content = @Content(schema =
@@ -87,42 +90,42 @@ public class RestaurantController {
                       }
                     ]
                     """)))
-    @ApiResponse(
-            responseCode = "404",
-            description = "Not found restaurant",
-            content = @Content(examples =
-            @ExampleObject(value = """
-                    {
-                      "type": "about:blank",
-                      "title": "Not Found",
-                      "status": 404,
-                      "detail": "Restaurant 'kf' not found",
-                      "instance": "/restaurants/dishes/kf"
-                    }
-                    """)))
-    @ApiResponse(
-            responseCode = "422",
-            description = "Validate error",
-            content = @Content(examples =
-            @ExampleObject(value = """
-                    {
-                      "type": "about:blank",
-                      "title": "Unprocessable Entity",
-                      "status": 422,
-                      "detail": "Invalid request content.",
-                      "instance": "/restaurants/dishes/kfc",
-                      "invalid_params": {
-                        "list[0].price": "должно находиться в диапазоне от 1 до 5000"
-                        }
-                    }
-                    """)))
-    @Operation(summary = "Add dishes to restaurant", description = "This is for admin")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "404",
+                    description = "Not found restaurant",
+                    content = @Content(examples =
+                    @ExampleObject(value = """
+                            {
+                              "type": "about:blank",
+                              "title": "Not Found",
+                              "status": 404,
+                              "detail": "Restaurant 'kf' not found",
+                              "instance": "/restaurants/dishes/kf"
+                            }
+                            """))),
+            @ApiResponse(responseCode = "422",
+                    description = "Validate error",
+                    content = @Content(examples =
+                    @ExampleObject(value = """
+                            {
+                              "type": "about:blank",
+                              "title": "Unprocessable Entity",
+                              "status": 422,
+                              "detail": "Invalid request content.",
+                              "instance": "/restaurants/dishes/kfc",
+                              "invalid_params": {
+                                "list[0].price": "должно находиться в диапазоне от 1 до 5000"
+                                }
+                            }
+                            """)))
+    })
     @PutMapping(value = "dishes/{restaurantName}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Restaurant addDish(@PathVariable String restaurantName, @RequestBody @Valid ValidateList<Dish> dishes) {
         return restaurantService.addDish(restaurantName, dishes.getList());
     }
 
+    @Operation(summary = "Vote to restaurant")
     @ApiResponse(
             responseCode = "404",
             description = "Not found restaurant",
@@ -136,7 +139,6 @@ public class RestaurantController {
                       "instance": "/restaurants/dishes/kf"
                     }
                     """)))
-    @Operation(summary = "Vote to restaurant")
     @PutMapping("vote/{restaurantName}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public String vote(@PathVariable String restaurantName, @AuthenticationPrincipal AuthUser authUser) {
@@ -150,6 +152,7 @@ public class RestaurantController {
         return restaurantService.findAll();
     }
 
+    @Operation(summary = "Get restaurant by id")
     @ApiResponse(
             responseCode = "404",
             description = "Not found restaurant",
@@ -163,7 +166,6 @@ public class RestaurantController {
                       "instance": "/restaurants/12"
                     }
                     """)))
-    @Operation(summary = "Get restaurant by id")
     @GetMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public Restaurant get(@PathVariable int id) {

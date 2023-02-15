@@ -31,30 +31,28 @@ public class AuthController {
                       "password": "string"
                     }
                     """)))
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "200",
-                            content = @Content(examples =
-                            @ExampleObject(value = """
-                                    {
-                                      "type": "string",
-                                      "accessToken": "string"
-                                    }
-                                    """))),
-                    @ApiResponse(responseCode = "422",
-                            description = "Bad credentials error",
-                            content = @Content(examples =
-                            @ExampleObject(value = """
-                                    {
-                                      "type": "about:blank",
-                                      "title": "Unprocessable Entity",
-                                      "status": 422,
-                                      "detail": "Неверные учетные данные пользователя",
-                                      "instance": "/login"
-                                    }
-                                    """))
-                    )
-            })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    content = @Content(examples =
+                    @ExampleObject(value = """
+                            {
+                              "type": "string",
+                              "accessToken": "string"
+                            }
+                            """))),
+            @ApiResponse(responseCode = "422",
+                    description = "Bad credentials error",
+                    content = @Content(examples =
+                    @ExampleObject(value = """
+                            {
+                              "type": "about:blank",
+                              "title": "Unprocessable Entity",
+                              "status": 422,
+                              "detail": "Неверные учетные данные пользователя",
+                              "instance": "/login"
+                            }
+                            """)))
+    })
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public JwtResponse login(@RequestBody JwtRequestLogin authRequest) {

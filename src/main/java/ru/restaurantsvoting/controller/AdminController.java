@@ -17,10 +17,10 @@ import ru.restaurantsvoting.service.UserService;
 
 import java.util.List;
 
+@Tag(name = "Admin", description = "The Admin API")
 @ApiResponses(value = {
         @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
         @ApiResponse(responseCode = "400", description = "Token error", content = @Content)})
-@Tag(name = "Admin", description = "The Admin API")
 @RestController
 @RequestMapping(value = "/admin", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
@@ -35,6 +35,7 @@ public class AdminController {
         return userService.findAll();
     }
 
+    @Operation(summary = "Get user")
     @ApiResponse(
             responseCode = "404",
             description = "Not found user",
@@ -48,13 +49,13 @@ public class AdminController {
                       "instance": "/admin/12"
                     }
                     """)))
-    @Operation(summary = "Get user")
     @GetMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public User get(@PathVariable int id) {
         return userService.findById(id);
     }
 
+    @Operation(summary = "Delete user")
     @ApiResponse(
             responseCode = "404",
             description = "Not found user",
@@ -68,43 +69,44 @@ public class AdminController {
                       "instance": "/admin/12"
                     }
                     """)))
-    @Operation(summary = "Delete user")
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
         userService.delete(id);
     }
 
-    @ApiResponse(
-            responseCode = "422",
-            description = "Validate error",
-            content = @Content(examples =
-            @ExampleObject(value = """
-                    {
-                      "type": "about:blank",
-                      "title": "Unprocessable Entity",
-                      "status": 422,
-                      "detail": "Invalid request content.",
-                      "instance": "/register",
-                      "invalid_params": {
-                        "email": "должно иметь формат адреса электронной почты"
-                      }
-                    }
-                    """)))
-    @ApiResponse(
-            responseCode = "404",
-            description = "Not found user",
-            content = @Content(examples =
-            @ExampleObject(value = """
-                    {
-                      "type": "about:blank",
-                      "title": "Not Found",
-                      "status": 404,
-                      "detail": "User with id = 12 not found",
-                      "instance": "/admin/12"
-                    }
-                    """)))
     @Operation(summary = "Update user")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "422",
+                    description = "Validate error",
+                    content = @Content(examples =
+                    @ExampleObject(value = """
+                            {
+                              "type": "about:blank",
+                              "title": "Unprocessable Entity",
+                              "status": 422,
+                              "detail": "Invalid request content.",
+                              "instance": "/register",
+                              "invalid_params": {
+                                "email": "должно иметь формат адреса электронной почты"
+                              }
+                            }
+                            """))),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not found user",
+                    content = @Content(examples =
+                    @ExampleObject(value = """
+                            {
+                              "type": "about:blank",
+                              "title": "Not Found",
+                              "status": 404,
+                              "detail": "User with id = 12 not found",
+                              "instance": "/admin/12"
+                            }
+                            """)))
+    })
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public User update(@RequestBody @Valid UserDto userDTO, @PathVariable int id) {

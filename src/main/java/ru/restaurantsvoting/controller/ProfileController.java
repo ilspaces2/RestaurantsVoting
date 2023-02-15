@@ -17,10 +17,10 @@ import ru.restaurantsvoting.model.User;
 import ru.restaurantsvoting.security.AuthUser;
 import ru.restaurantsvoting.service.UserService;
 
+@Tag(name = "Profile", description = "The User API")
 @ApiResponses(value = {
         @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
         @ApiResponse(responseCode = "400", description = "Token error", content = @Content)})
-@Tag(name = "Profile", description = "The User API")
 @RestController
 @RequestMapping(value = "/profile", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
@@ -35,6 +35,7 @@ public class ProfileController {
         userService.delete(authUser.getId());
     }
 
+    @Operation(summary = "Update profile")
     @ApiResponse(
             responseCode = "422",
             description = "Validate error",
@@ -51,7 +52,6 @@ public class ProfileController {
                       }
                     }
                     """)))
-    @Operation(summary = "Update profile")
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public User update(@RequestBody @Valid UserDto userDTO, @AuthenticationPrincipal AuthUser authUser) {
